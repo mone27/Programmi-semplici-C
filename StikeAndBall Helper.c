@@ -12,11 +12,13 @@ int main(){
 	do{
 		printf("Come posso esserti di aiuto?\t\t\t\t\t[EOF per terminare]\n1) Genera numero\n2) Strike and Ball Helper\n\n>");//prompt
 		scanf("%d",&x);//ricevo comando
-		if(x>0&&x<=FUN)//evito errori a tempo di esecuzione
+		if(x>0&&x<=FUN)//evito immissioni errate
 			(*menu[x-1])();//chiamo funzione desiderata
 	}while(x!=EOF);//fintanto che voglio fare qualcosa
 	return 0;
 }
+
+
 //funzione che scorre un vettore comparando ogni locazione con una determinata lettera; se trova uguaglianze restituisce uno altrimenti zero
 int cercaBall(char * const val,const char vet[]){
 	int x;
@@ -25,6 +27,8 @@ int cercaBall(char * const val,const char vet[]){
 			return 1;//ritorno un valore positivo
 	return 0;//se no zero
 }
+
+
 //funzione che conta numero di strike e di ball presenti in una chiamata
 void contaPunti(void){
 	char s[G],m[G];
