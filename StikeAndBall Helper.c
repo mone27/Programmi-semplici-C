@@ -10,7 +10,7 @@ int main(){
 	void (*menu[FUN])(void)={Genera,contaPunti};
 	int x;
 	do{
-		printf("Come posso esserti di aiuto?\t\t\t\t\t[EOF per terminare]\n[O] Implmenetato [X] Non implementato\n\n1) Genera numero [X]\n2) Strike and Ball Helper [O]\n\n>");//prompt
+		printf("Come posso esserti di aiuto?\t\t\t\t\t[EOF per terminare]\n[O] Implmenetato [X] Non implementato\n\n) Genera numero [X]\n2) Strike and Ball Helper [O]\n\n>");//prompt
 		scanf("%d",&x);//ricevo comando
 		if(x>0&&x<=FUN)//evito errori a tempo di esecuzione
 			(*menu[x-1])();//chiamo funzione desiderata
