@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#define G 5
+#define G 4
 #define FUN 2
 
 int main(){
@@ -10,13 +10,14 @@ int main(){
 	void (*menu[FUN])(void)={Genera,contaPunti};
 	int x;
 	do{
-		printf("Come posso esserti di aiuto?\t\t\t\t\t[EOF per terminare]\n1) Genera numero\n2) Strike and Ball Helper\n\n>");//prompt
+		printf("Come posso esserti di aiuto?\t\t\t\t\t[EOF per terminare]\n[O] Implmenetato [X] Non implementato\n\n1) Genera numero [X]\n2) Strike and Ball Helper [O]\n\n>");//prompt
 		scanf("%d",&x);//ricevo comando
 		if(x>0&&x<=FUN)//evito errori a tempo di esecuzione
 			(*menu[x-1])();//chiamo funzione desiderata
 	}while(x!=EOF);//fintanto che voglio fare qualcosa
 	return 0;
 }
+
 //funzione che scorre un vettore comparando ogni locazione con una determinata lettera; se trova uguaglianze restituisce uno altrimenti zero
 int cercaBall(char * const val,const char vet[]){
 	int x;
@@ -25,13 +26,27 @@ int cercaBall(char * const val,const char vet[]){
 			return 1;//ritorno un valore positivo
 	return 0;//se no zero
 }
+
 //funzione che conta numero di strike e di ball presenti in una chiamata
 void contaPunti(void){
 	char s[G],m[G];
-	int strike=0,ball=0,x;
+	int strike=0,ball=0,x,uguali;
 	int cercaBall(char * const val,const char vet[]);
 	printf("Scrivi i numeri segreti che hai scelto.\n>");
 	scanf("%s",s);//ottengo stringa
+    uguali = 0;
+    for (int ai = 0; ai < 4 ; ai++) //ciclo controllo del numero segreto. uguali
+        {
+            for (int j = 0; j < 4; j++)
+                if ((s[ai] == s[j]) && (ai != j))
+                    uguali = 1;
+            if (!uguali)
+                uguali=0;
+        }
+        if(uguali==1){ //se non sono uguali esci
+            printf("Hai almeno una coppia uguale\n ");
+            exit(1);
+            }
 	for(x=0;x<100;x++)
 		printf("#\n");//nascondo l'immissione
 	while(1){//fintanto che m non è una stringa composta anche da lettere
@@ -59,5 +74,5 @@ void contaPunti(void){
 	printf("\nProgramma Helper Terminato\n\n\n");
 }
 void Genera(void){
-
+    exit(1);
 }
