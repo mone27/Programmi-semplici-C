@@ -1,13 +1,15 @@
-
 //Funzionante: conta i punti, controlla doppie cifre Alessio
 //Da fare: controllare che ogni locazione del vettore sia <9 e >=0
 
 #include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
 #define CIFRE 4 //numero di cifre con cui si gioca
 
 void getNumber(int numero[]);
 void ritornaVettorePunti(const int segreto[CIFRE],const int chiamata[CIFRE], int sb[2]);
-int checkUguali(const int numero[]);
+bool checkUguali(const int numero[]);
 
 int main() {
   int num_segreto[CIFRE];
@@ -19,6 +21,8 @@ int main() {
   do{//controllo che si immetta un numero senza cifre ripetute
     getNumber(num_segreto);
   }while(checkUguali(num_segreto));
+  
+  system ("clear");//nasconde il numero SEGRETO 
 
   while(1){//per il momento per sempre
     
@@ -69,13 +73,14 @@ void getNumber(int numero[]){
 
 //Funzione che controlla che non ci siano due cifre uguali all'interno di uno stesso numero
 //restituisce 1 se trova cifre uguali
-int checkUguali(const int numero[]){
-  int a,j,uguali;
+bool checkUguali(const int numero[]){
+  int a,j;
+  bool uguali = false; 
   uguali = 0;// se trovo due cifre uguali diventa vero e mi inculo l'utente
   for (a = 0; a < CIFRE && !uguali ; a++){ 
     for (j = 0; j < CIFRE && !uguali ; j++)
       if ((numero[a] == numero[j]) && (a != j)){
-	uguali = 1;
+	uguali = true;
 	printf("ERRORE: Sono state immesse almeno due cifre uguali, ricontrollare istanza\n");
       }
   }
