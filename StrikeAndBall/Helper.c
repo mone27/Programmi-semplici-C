@@ -1,5 +1,4 @@
 //Funzionante: conta i punti, controlla doppie cifre Alessio
-//Da fare: controllare che ogni locazione del vettore sia <9 e >=0
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -22,7 +21,7 @@ int main() {
     getNumber(num_segreto);
   }while(checkUguali(num_segreto));
   
-  system ("clear");//nascondo il numero SEGRETO con un comando standard per sistemi compatibili a GNU/Linux
+  system("clear");//nascondo il numero SEGRETO con un comando standard per sistemi compatibili a GNU/Linux
 
   while(1){//per il momento per sempre
     
@@ -35,7 +34,6 @@ int main() {
     ritornaVettorePunti(num_segreto,num_chiamata,vettorePunti);
     printf("%ds%db\n",vettorePunti[0],vettorePunti[1]);
   }
-  
   return 0;
 }
 
@@ -61,13 +59,16 @@ void ritornaVettorePunti(const int segreto[CIFRE],const int chiamata[CIFRE], int
   return;
 }
 
-
 //Funzione che restituisce il numero preso in input dall'utente
 void getNumber(int numero[]){
   int i;
   printf("Immetti le cifre del numero separate da spazio\n--> ");
-  for(i=0;i<CIFRE;i++)//immagazzino cifre nelle varie locazioni
+  for(i=0;i<CIFRE;i++)//immagazzino cifre nelle varie locazioni  
     scanf("%d",&numero[i]);
+    while(numero[i] >= 0 && numero[i] <= 9){
+      puts("Solo numeri compresi tra 0 e 9");
+      scanf("%d",&numero[i]);
+    }
   return;
 }
 
