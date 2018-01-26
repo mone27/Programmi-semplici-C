@@ -22,7 +22,7 @@ int main() {
     getNumber(num_segreto);
   }while(checkUguali(num_segreto));
   
-  system ("clear");//nasconde il numero SEGRETO 
+  system ("clear");//nascondo il numero SEGRETO con un comando standard per sistemi compatibili a GNU/Linux
 
   while(1){//per il momento per sempre
     
