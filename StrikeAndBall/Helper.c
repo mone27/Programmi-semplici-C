@@ -1,5 +1,3 @@
-//Funzionante: conta i punti, controlla doppie cifre Alessio
-
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -64,7 +62,7 @@ void ritornaVettorePunti(const int segreto[CIFRE],const int chiamata[CIFRE], int
 void getNumber(int numero[]){
   int i;
   
-  printf("Immetti le cifre del numero separate da spazio\n--> ");
+  printf("Immetti le %d cifre del numero separate da spazio\n--> ", CIFRE);
   for(i=0;i<CIFRE;i++)//immagazzino cifre nelle varie locazioni  
     scanf("%d",&numero[i]);
   
