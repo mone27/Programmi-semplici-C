@@ -1,4 +1,4 @@
-#include "Header.h"
+#include "Libreria.h"
 
 int main() {
   int num_segreto[CIFRE];

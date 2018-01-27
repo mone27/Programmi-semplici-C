@@ -1,3 +1,13 @@
+//Librerie:
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
+//Configurazioni:
+#define CIFRE 4 //imposta numero di cifre con cui si gioca
+
+//Funzioni:
+
 //Funzione che prende in input il vettore del numero segreto quello della chiamata avversaria e uno vuoto da riempire
 //Restituisce un vettore di due locazioni con il numero di strike in 0 e il numero di ball in 1
 void ritornaVettorePunti(const int segreto[CIFRE],const int chiamata[CIFRE], int sb[2]){
