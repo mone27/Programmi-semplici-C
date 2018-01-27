@@ -21,8 +21,9 @@ int main() {
     getNumber(num_segreto);
   }while(checkUguali(num_segreto));
   
-  system("clear");//nascondo il numero SEGRETO con un comando standard per sistemi compatibili a GNU/Linux
+  system("clear");//nascondo il numero SEGRETO con un comando per sistemi compatibili a GNU/Linux
 
+  puts("Ora puoi immettere le chiamate avversarie:");
   while(1){//per il momento per sempre
     
     //ottengo prossima chiamata avversaria
@@ -59,16 +60,20 @@ void ritornaVettorePunti(const int segreto[CIFRE],const int chiamata[CIFRE], int
   return;
 }
 
-//Funzione che restituisce il numero preso in input dall'utente
+//Funzione che restituisce il vettore del numero preso in input dall'utente
 void getNumber(int numero[]){
   int i;
+  
   printf("Immetti le cifre del numero separate da spazio\n--> ");
   for(i=0;i<CIFRE;i++)//immagazzino cifre nelle varie locazioni  
     scanf("%d",&numero[i]);
-    while(numero[i] >= 0 && numero[i] <= 9){
-      puts("Solo numeri compresi tra 0 e 9");
-      scanf("%d",&numero[i]);
+  
+  for(i=0;i<CIFRE;i++)//controllo ogni locazione per vedere se contiene una sola cifra
+    if(numero[i]<0 || numero[i]>9){//se l'istanza non soddisfa le precondizioni 
+      puts("Errore: Questa volta separa tutte le singole cifre da uno spazio");
+      getNumber(numero);//stampo errore e richiamo nuovamente la funzione (tanto i vettori vengono passati per riferimento)
     }
+  
   return;
 }
 
