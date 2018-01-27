@@ -9,3 +9,5 @@ Repository per fare esercizio con git e con la programmazione di gruppo.
 2. **Sharingan** *Non funzionante*
     * Riscrivere programma secondo le regole della programmazione strutturata
     * Pensare algoritmo alla base della soluzione del problema
+3. **Libreria.h** *Funzionante*
+    * Aggiungere definizione per windows e linux
