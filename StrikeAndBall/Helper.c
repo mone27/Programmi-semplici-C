@@ -11,7 +11,7 @@ int main() {
     getNumber(num_segreto);
   }while(checkUguali(num_segreto));
   
-  system("clear");//nascondo il numero SEGRETO con un comando per sistemi compatibili a GNU/Linux
+  clearCls();//nascondo il numero SEGRETO con un comando per sistemi compatibili a GNU/Linux
 
   puts("Ora puoi immettere le chiamate avversarie:");
   while(1){//per il momento per sempre
