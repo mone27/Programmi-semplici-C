@@ -10,4 +10,3 @@ Repository per fare esercizio con git e con la programmazione di gruppo.
     * Riscrivere programma secondo le regole della programmazione strutturata
     * Pensare algoritmo alla base della soluzione del problema
 3. **Libreria.h** *Funzionante*
-    * Controllare funzionamento clear su Windows
