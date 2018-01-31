@@ -10,3 +10,8 @@ Repository per fare esercizio con git e con la programmazione di gruppo.
     * Riscrivere programma secondo le regole della programmazione strutturata
     * Pensare algoritmo alla base della soluzione del problema
 3. **Libreria.h** *Funzionante*
+4. **disposition-0.8** *Da controllare*
+  Nota:   Per comprendere la libreria e' necessario padroneggiare la seconda parte di programma di Fondamenti di Informatica.
+    * Capire come funziona la libreria
+    * Capire se e' possibile utilizzare questa libreria per generare tutte le disposizioni di X strike e Y ball in CIFRE posti.
+    

@@ -1,0 +1,83 @@
+Use of Cmem
+
+Cmem (count memory) tracks the amount of dynamic memory allocated by
+a program.  Is useful to check that the program allocates exactly the
+memory that it needs and that it frees that memory correctly.
+
+Cmem helps to the correction of certain common errors showing messages in
+every allocation and liberation of memory, and terminating the program
+whenever it tries to free not allocated memory or already freed memory.
+By default, every message from Cmem are sent to the standard error,
+stderr, although they can be redirected to another file if needed.
+
+To use Cmem in a program you have to do the following changes in the code:
+
+1. Include the header file "cmem.h" in the files using the functions
+malloc(), realloc() or free().
+
+2. Replace every call to malloc(), realloc() or free(), with their
+equivalences from Cmem: cmem_malloc(), cmem_realloc() and cmem_free().
+
+3. Compile the changed programs together with the file "cmem.c".
+
+By default, automatic printing of messages every time memory is allocated
+or freed is disabled. To enable (or disable) the automatic generation
+of messages, from any point of the program where you want to do it,
+you have to use the following macros:
+
+...
+cmem_enable_messages(); /* enable the output of messages */
+...
+cmem_disable_messages(); /* disable the output of messages */
+...
+
+With independence of if it is enabled (or not) the generation of messages,
+from any point of the program you can show the amount of allocated memory
+by the program using the call:
+
+cmem_info(); /* prints the summary of the total of allocated memory */
+
+If you need information about the amount of memory used by every
+memory unit allocated by the program, in any momment you can get a list
+calling to:
+
+cmem_info_ext(); /* prints the ID and bytes allocated for every element */
+
+To do that the program write the messages in a file instead send them to
+the standard error, you just have to call the macro cmem_enable_file(),
+passing as argument the name of the file:
+
+...
+cmem_enable_file("filename.txt"); /* redirect the messages to the file */
+...
+cmem_disable_file(); /* continue sending messages to the standard error */
+...
+
+The automatic termination of the program when cmem_free() fails can be
+disabled (or enabled again) using the following macros:
+
+...
+cmem_disable_exit_on_error(); /* program continues on incorrect liberations */
+...
+cmem_enable_exit_on_error(); /* program terminates on bad liberations again */
+...
+
+With independence of if it is enabled (or not) the generation of
+messages, you can disable completely the execution of the functions of
+Cmem, once debugging is finished, without restore manually the calls to
+cmem_malloc(), cmem_realloc() and cmem_free(), defining the preprocessor
+variable NCMEM in the files that use the functions of Cmem, before the
+loading of the file "cmem.h", in a similar way as you do to disable the
+calls to the macro assert():
+
+...
+#define NCMEM
+#include "cmem.h"
+...
+
+The rest of the macros enable/disable are also deleted conveniently when
+NCMEM is present, and so is not necessary to delete them from the code
+to prevent a time consumption.
+
+That's all. Happy debugging and... Enjoy!
+

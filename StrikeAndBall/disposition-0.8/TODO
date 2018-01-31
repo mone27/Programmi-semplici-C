@@ -1,0 +1,48 @@
+Small things that need to be done:
+
+* Administration:
+  - Put the program in CVS
+  - Add the files to use autoconf/automake
+  - Test and report if the program works fine in other platforms and/or OS
+* Programming:
+  - Change the disp program to use getopt to get the options
+  - Internacionalization of the disp program
+* Documenting:
+  - Put comments in functions to use an automatic documentation generator
+  - Create the man or info page of the disp program
+  - Write an extended manual for the library
+  - Report projects in which this library is used (if any)
+  - Find mathematical demonstrations of correctness in the algorithms (if any)
+* Bugs:
+  - Report errors in algorithms
+  - Enhance the algorithms
+  - Think about better structures
+  - Write tests to find bugs
+
+And, of course, any other suggestions about the library.
+
+* Other changes in code:
+  - Check the behaviour in the limit when large numbers are provided.
+  - Use of size_t instead of int for the parameters.
+  - Size zero for types with restricted repetition and tests for it
+  - Implement previous* functions for types with restricted repetition
+  - Create tests for functions copy* for types with restricted repetition
+  - Think how to implement rand* functions of restricted repetition types
+  - Write a program for showing the use of disppage
+  - Create tests for functions of disppage
+  - Reload a page in disppage.c, to change the page size inserting or deleting
+    dispositions from the start or the end of the page (expand, reduce?),
+    and simple new routines could be reused in the rest of the functions
+  - Options for input and output separator of the elements showed in disp
+  - Disp may accept sequences of characters like [a-z] for abcde...wxyz
+  - Implement functions to find the next (or previous) disposition with
+    a given subsequence, where combinations can accept unordered numbers.
+  - Are needed functions for retrieve not the exact number of a disposition,
+    but a percentage, a number in range 0-1, to use for showing the place of
+    a disposition in the list, when the total is a very large number.
+  - Every next() or prev() functions can call to last() or first()
+    to restore the disposition if they change the vector and it was
+    already at the last (or first) disposition. However, after that
+    the disposition does not need to preserve the contents of the vector.
+  - Program to create automatically the base code for any type.
+

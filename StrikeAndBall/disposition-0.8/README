@@ -1,0 +1,113 @@
+Disposition
+
+C Library designed to generate in sequence permutations or combinations
+(possible orderings or subsets) of a number of objects, with or without
+repetition, called "dispositions" here.
+
+There is a simple description of these topics of combinatorics in:
+http://en.wikipedia.org/wiki/Permutations_and_combinations
+
+Example of use:
+
+#include "permutation.h"
+#include <stdio.h>
+int main(void)
+{
+	Permutation *perm;
+	int numelem, size, i;
+	perm = newPermutation(numelem = 5, size = 3, NULL);
+	if (!perm) return 1;
+	disp_first(perm);
+	do {
+		for (i = 0; i < disp_size(perm); i++)
+			printf("%d ", disp_vec(perm)[i]);
+		printf("\n");
+	} while (disp_next(perm));
+	disp_delete(perm);
+	return 0;
+}
+
+The type Permutation is actually an alias of Disposition. Parameters of
+the new() function can vary since it is not included in the interface,
+but they are the same for all the basic types: number of elements, size
+of the dispositions and an optional address to retrieve information
+about errors that can be NULL.
+
+The following preprocessor macros are provided for every type that
+implements the interface:
+
+	disp_size(), disp_numelem(), disp_vec(), disp_first(),
+	disp_last(), disp_check(), disp_next(), disp_prev(),
+	disp_copy(), disp_rand() and disp_delete().
+
+Warning! Most of the macros evaluate its first parameter two times,
+so do not put calls to functions inside the first parameter of them.
+
+The preprocessor macro disp_vec() returns the address of the vector with
+the apropriate size where the dispositions are made, which is provided
+for read-only use and it must not be changed. The macro disp_first()
+initializes the vector with the first valid disposition. The macro
+disp_next() moves to the next disposition and returns 0 when it has been
+called standing at the last disposition of the sequence.
+
+The macros disp_last() and disp_prev() are the opposite of disp_first()
+and disp_next(). The parameters of the macro disp_check() are: The
+disposition which vector must be checked and an optional address for
+retrieving information about errors (this can be NULL).  It checks the
+values of the vector and returns a constant to say if the disposition
+is correct (DISP_CHECK_OK) or not.  The macro disp_copy() returns a new
+disposition which is a copy of the disposition passed as parameter, and
+disp_rand() jumps to a random disposition if srand() has been called
+before. The simple macro called disp_set() can be used to change a
+disposition taking the elements from another vector.
+
+Any single Disposition structure can be shared between many different
+vectors, provided they have the correct size, to save memory when we
+need many dispositions of the same type, for example. You can attach
+any vector to a disposition just assigning its address to the macro
+disp_vec(), instead of copying the contents of the vector using the
+macro disp_set().  You can overwrite the address of the vector because
+its memory was allocated together with the memory allocated for the
+structure, in a single block, so the memory has to be released if the
+structure is deleted with disp_delete().
+
+The following common disposition types are already defined:
+
+	Permutation, Combination, PermutationRep, CombinationRep,
+	PermutationCRep, PermutationRRep and CombinationRRep.
+
+Their header files are, respectively:
+
+	permutation.h, combination.h, permutationrep.h, combinationrep.h,
+	permutationcrep.h, permutationrrep.h and combinationrrep.h.
+
+The last two types are generalizations of permutations and combinations
+respectively, but specifying, for each element, the maximum number of
+times that it can appear in every disposition. These types are called here
+"Permutations and Combinations with Restricted Repetition".  The other
+type with repetition, "Permutations with Constant Repetition" is a subset
+of the permutations with repetition where each element is repeated the
+same number of times in every permutation, useful to get the different
+words that you can generate changing the order of the letters of a word
+which has repeated letters, for example, the word "DISPOSITION".
+
+Of course, there are other projects related that I have found, please
+report if you find more:
+
+The GSL (GNU Scientific Library) provides the same functionality that
+this library, more polished and optimized, but restricted to simple
+Permutations (Pn) and Combinations (nCk), also offering something more,
+like I/O:
+http://www.gnu.org/software/gsl/manual/gsl-ref_9.html#SEC188
+http://www.gnu.org/software/gsl/manual/gsl-ref_10.html#SEC199
+
+The Perl module Math::Combinatorics offer a pure Perl implementation
+of Permutations (nPk), Combinations (nCk) and some kind of repetition
+forms of those, in an abstract way, with some useful tools also:
+http://search.cpan.org/~allenday/Math-Combinatorics-0.07/
+
+The SourceForge.net project comb-objects (also named "Generating
+combinatorial objects") is a C++ console program for generating
+permutations, combinations and other arrangements of numbers and words:
+http://sourceforge.net/projects/comb-objects
+

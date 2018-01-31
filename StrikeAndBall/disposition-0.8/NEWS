@@ -1,0 +1,21 @@
+Disposition 0.8:
+
+	* Now Disposition is compiled as a library, so you can link it
+	  with your program more easily.
+
+	* Type PermutationCRep is now better tested, fixed and complete.
+	  However, the "restricted" repetition types are not finished yet.
+
+	* Added program lc (like program wc) for counting dispositions
+	  on non-UNIX systems.
+
+	* API change: Removed the macro disp_end() to simplify the library.
+	  The old loop:  for (disp_first(d); !disp_end(d); disp_next(d)) {...}
+	  now should be: for (disp_first(d), c = 1; c; c = disp_next(d)) {...}
+	  or simply:     disp_first(d); do { ... } while (disp_next(d));
+
+	* Now a single Disposition structure can be shared between many
+	  different vectors of the correct size, to save memory for example.
+
+	* The Makefile has options to install the library in /usr/local.
+

@@ -1,0 +1,126 @@
+Disposition
+ISO-8859-1
+
+Biblioteca escrita en C diseñada para generar secuencias de variaciones,
+permutaciones y combinaciones (las posibles ordenaciones o subconjuntos)
+de un cierto número de objetos, llamadas aquí "disposiciones".
+
+Hay una breve descripción sobre estas cuestiones de combinatoria en:
+http://en.wikipedia.org/wiki/Permutations_and_combinations
+
+Ejemplo de uso:
+
+#include "permutation.h"
+#include <stdio.h>
+int main(void)
+{
+	Permutation *perm;
+	int numelem, size, i;
+	perm = newPermutation(numelem = 5, size = 3, NULL);
+	if (!perm) return 1;
+	disp_first(perm);
+	do {
+		for (i = 0; i < disp_size(perm); i++)
+			printf("%d ", disp_vec(perm)[i]);
+		printf("\n");
+	} while (disp_next(perm));
+	disp_delete(perm);
+	return 0;
+}
+
+Nota: Debemos observar que las aquí denominadas "Permutations" no son
+otra cosa que nuestras "Variaciones", ya que en la bibliografía de
+habla inglesa se llaman así.  Para obtener nuestras "Permutaciones
+con Repetición" la biblioteca proporciona otro tipo de "Variaciones
+especiales", denominadas aquí "Permutations with Constant Repetition".
+
+El tipo "Permutation" es realmente un "alias" de "Disposition".
+Los parámetros que recibe la función new() pueden variar, ya que esta
+función no se incluye en la interfaz, aunque son los mismos para todos
+los tipos básicos: número de elementos, tamaño de las disposiciones y
+un puntero opcional para recoger información sobre errores que puede
+ser NULL.
+
+Las siguientes macros del preprocesador se proporcionan para todos los
+tipos que implementen la interfaz:
+
+	disp_size(), disp_numelem(), disp_vec(), disp_first(),
+	disp_last(), disp_check(), disp_next(), disp_prev(),
+	disp_copy() y disp_delete().
+
+¡Atención! La mayoría de las macros evalúan su primer parámetro dos
+veces, por tanto no deben ponerse llamadas a funciones dentro del primer
+parámetro de ellas.
+
+La macro del preprocesador disp_vec() devuelve la dirección del vector
+de tamaño apropiado donde se construyen las disposiciones, el cual se
+ofrece sólo para lectura y no debe ser cambiado.  La macro disp_first()
+inicializa el vector con la primera disposición válida. La macro
+disp_next() avanza a la siguiente disposición y devuelve 0 cuando ha
+sido llamada estando en la última disposición de la secuencia.
+
+Las macros disp_last() y disp_prev() son las opuestas de disp_first() y
+disp_next(). Los parámetros de la macro disp_check() son: La disposición
+cuyo vector debe ser comprobado y una dirección opcional para recoger
+información sobre errores (que puede ser NULL). La función comprueba los
+valores y devuelve una constante que indica si la disposición es correcta
+(DISP_CHECK_OK) o no.  La macro disp_copy() devuelve una nueva disposición
+que es una copia de la disposición pasada como parámetro, y disp_rand()
+salta a una disposición aleatoria si se ha llamado antes a srand().
+La sencilla macro llamada disp_set() puede utilizarse para cambiar una
+disposición tomando los elementos de otro vector.
+
+Una misma estructura Disposition puede ser compartida por varios vectores
+distintos, siempre que tengan el tamaño correcto, para ahorrar memoria
+cuando son necesarias muchas disposiciones del mismo tipo, por ejemplo.
+Se puede enlazar cualquier vector a una disposición simplemente asignando
+su dirección a la macro disp_vec(), en vez de copiar los contenidos del
+vector usando la macro disp_set(). Puede reemplazarse la dirección del
+vector porque su memoria está reservada junto a la memoria reservada
+para la estructura, en un mismo bloque, de forma que esa memoria será
+liberada si la estructura sea eliminada con disp_delete().
+
+Los siguientes tipos de disposiciones comunes están ya definidos:
+
+	Permutation, Combination, PermutationRep, CombinationRep,
+	PermutationCRep, PermutationRRep y CombinationRRep.
+
+Sus ficheros de cabecera son, respectivamente:
+
+	permutation.h, combination.h, permutationrep.h, combinationrep.h,
+	permutationcrep.h, permutationrrep.h y combinationrrep.h.
+
+Los últimos dos tipos son generalizaciones de las variaciones y
+combinaciones respectivamente, pero especificando, para cada elemento, el
+número máximo de veces que éste puede aparecer en cada disposición. Estos
+tipos se denominan aquí "Variaciones y Combinaciones con Repetición
+Restringida" (PermutationRRep y CombinationRRep).  El otro tipo con
+repetición, las "Variaciones con Repetición Constante" (PermutationCRep),
+son nuestras "Permutaciones con Repetición", es decir, un subconjunto
+de las variaciones con repetición en el que cada elemento se repite el
+mismo número de veces en cada variación, lo cual es útil para obtener
+las diferentes palabras que pueden generarse cambiando el orden de las
+letras de una palabra que tiene letras repetidas, como por ejemplo,
+la palabra "DISPOSITION".
+
+Por supuesto, hay también otros proyectos relacionados que he encontrado.
+Si alguien conoce alguno más que lo diga:
+
+La GSL (la biblioteca científica de GNU) ofrece la misma funcionalidad
+que esta biblioteca, más cuidada y optimizada, pero restringida a simples
+permutaciones (Pn) y Combinaciones (nCk), aunque también ofrece alguna
+cosa más, como E/S:
+http://www.gnu.org/software/gsl/manual/gsl-ref_9.html#SEC188
+http://www.gnu.org/software/gsl/manual/gsl-ref_10.html#SEC199
+
+El módulo para Perl Math::Combinatorics proporciona una implementación
+pura en Perl de variaciones (nPk), combinaciones (nCk) y un cierto tipo
+de formas con repetición de ellas, en una forma abstracta, e incluyendo
+algunas herramientas útiles también:
+http://search.cpan.org/~allenday/Math-Combinatorics-0.07/
+
+El proyecto de SourceForge.net comb-objects (también llamado "Generating
+combinatorial objects") es un programa de terminal en C++ para generar
+variaciones, combinaciones y otras ordenaciones de números y palabras:
+http://sourceforge.net/projects/comb-objects
+

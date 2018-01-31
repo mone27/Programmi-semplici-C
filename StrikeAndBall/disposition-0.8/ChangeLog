@@ -1,0 +1,196 @@
+2006/01/16
+	* options added to the Makefile to uninstall the library and disp
+	* created files INSTALL and INSTALL_spanish
+	* added tests of sequences for types Combination and CombinationRep
+	* created tests of sequences for PermutationRRep and CombinationRRep
+
+2006/01/15
+	* added tests of sequences for types PermutationRep and PermutationCRep
+	* added test of copy for type PermutationCRep
+	* now the allocation of memory for the struct is done in a single block
+	* document the use of a single struct and many vectors in the README
+	* options added to the Makefile to install the library and disp
+
+2006/01/14
+	* changed the name of the program wc.c to lc.c (line count)
+	* changed functions of commontestutil.c for sending output to any file
+	* used the new functions of sequences in tests of type Permutation
+
+2006/01/13
+	* implemented the main function for check sequences
+
+2006/01/12
+	* created new functions for easy testing of sequences (next+prev)
+
+2006/01/11
+	* implemented previous for PermutationCRep
+
+2006/01/09
+	* now Cmem says if free gets an address not at the start of the block
+
+2006/01/07
+	* added variable in Cmem to disable the automatic exiting on error
+
+2006/01/06
+	* now the Makefile can generate the static or dynamic library file
+
+2006/01/03
+	* implemented and tested randPermutationCRep
+	* created tests of functions first and last for PermutationCRep
+	* now functions of PermutationCRep work when repetition vector is NULL
+	* created tests for checkPermutationCRep and fixed errors on it
+
+2006/01/01
+	* added the file testdisp.bat to test the disp program in DOS/Windows
+	* removed finally the macro disp_end() to simplify functions and tests
+
+2005/12/09
+	* created script disptest.sh for testing the disp program with cmp
+
+2005/12/08
+	* created README for the Cmem program and translated its comments
+	* created simple programs wc.c and cmp.c for use on non-UNIX systems
+
+2005/12/06
+	* included the web page created to be an introduction to the library
+
+2005/11/27
+	* rewritten TODO file
+	* published the program in SourceForge.net
+
+2005/11/26
+	* implemented and tested randCombinationRep
+
+2005/11/23
+	* implemented and tested randPermutationRep
+	* created tests findNthElemCombination to fix a bug in randCombination
+
+2005/11/22
+	* implemented and tested randCombination
+
+2005/11/21
+	* added the new function disp_rand to the interface
+	* create functions for test functions for generate random dispositions
+	* implemented and tested randPermutation
+
+2005/11/20
+	* added the copyright and license notices to all source files
+
+2005/11/17
+	* finished support in gendisp for restricted types
+	* renamed main program gendisp to disp
+
+2005/11/16
+	* added functions to gendisp for counting repeated characters
+
+2005/11/15
+	* changed options in gendisp to prepare it for adding restricted types
+
+2005/11/13
+	* changed and tested the function str_to_vec in commontestutil.c
+
+2005/11/12
+	* changed and tested the function equal_vec_str in commontestutil.c
+
+2005/11/11
+	* added -DNDEBUG to the options for the compiler in the Makefile
+	* created file README_spanish
+	* created the tests for the previous functions of restricted types
+	* created files dispbasictestutil.[ch] for testing basic types
+	* created a new program testdisposition.c to group all the tests
+
+2005/11/08
+	* created a standard structure of directories for the library
+
+2005/10/30
+	* deleted the filename from the comment in the first line of each file
+
+2005/09/29
+	* added next, first and last for PermutationCRep
+	* created new files for testing PermutationCRep and edited the Makefile
+
+2005/09/28
+	* added initial files for permutations with constant repetition
+
+2005/08/25
+	* finished change of basic types to accept size 0, with tests
+	* added tests of copy for types PermutationRep and CombinationRep
+
+2005/08/24
+	* added tests of function copy for types Permutation and Combination
+	* added new test program testcommontestutil.c to test commontestutil.c
+	* changed the error constant SIZE_LT_ONE to SIZE_LT_ZERO
+	* changed filenames with "disposition" to the shorter "disp"
+
+2005/08/17
+	* added new files disppage.[ch] for managing dispositions in pages
+	* added a warning saying that macros evaluate its parameter two times
+
+2005/08/16
+	* added new function copy to the interface for making duplicates
+
+2005/08/13
+	* created new console program gendisprrep.c only for restricted types
+	* changed gendisp.c to read a repetition list instead repeated elements
+	* implemented and tested nextCombinationRRep
+
+2005/08/12
+	* finished the migration of every program file to the new interface
+
+2005/08/10
+	* changed interface replacing set* functions with others named check*
+	* implemented and tested nextPermutationRRep
+
+2005/08/09
+	* added new field dispdata (void *) to the struct Disposition
+	* changed filenames that begin with test* and they are not tests
+
+2005/08/08
+	* implemented set for types CombinationRRep and PermutationRRep
+	* created files disprreptestutil.[ch] to group functions for testing
+	* added test_*_set() for types CombinationRRep and PermutationRRep
+
+2005/08/07
+	* added tests for correct implementation of the dispend flag
+	* added macro disp_end() and a flag for it in the struct Disposition
+
+2005/08/05
+	* included Cmem files in the distribution
+
+2005/08/03
+	* implemented option -v for gendisp.c to show the list in reverse order
+	* added next and implemented set and previous for type CombinationRep
+
+2005/08/02
+	* implemented previousCombination() and finished tests for combinations
+	* implemented first/last for types PermutationRRep and CombinationRRep
+	* created files for type CombinationRRep
+	* created abbreviatures of the error constants to build better tests
+
+2005/08/01
+	* rewritten all test files
+	* added error constant ERR_NEW_NUMELEM_LT_ONE and rewrite functions
+	* added functions test_*_new() to all tests files for testing errors
+	* replaced macros with much better functions in dispositiontestutil.c
+	* gendisp.c now can initialize repetition vector for PermutationRRep
+	* isolated common utility functions for tests in new file testutil.c
+
+2005/07/31
+	* isolated malloc and free functions in new file dispcommon.c
+	* changed filenames disptestutil.[ch] to dispositiontestutil.[ch]
+	* created files for types CombinationRep and PermutationRRep
+	* new type PermutationRRep and new function for it in disposition.c
+	* changed interface and code of new/set functions for returning errors
+
+2005/07/30
+	* added implementation of next for type Combination
+	* created files for type Combination
+
+2005/07/29
+	* rewritten tests in testpermutationrep.c
+	* implemented previousPermutation()
+	* rewritten tests in testpermutation.c using the new macros
+	* created macros in disptestutil.c to write better tests
+	* added function equal_disp_str() to disptestutil.c
+	* changed implementation of nextPermutation() using for in loops
+

@@ -1,0 +1,88 @@
+Uso de Cmem
+ISO-8859-1
+
+Cmem (count memory) lleva la cuenta de la memoria dinámica que ha sido
+reservada por un programa. Es útil para comprobar que el programa reserva
+exactamente la memoria dinámica que necesita y la libera correctamente.
+
+Cmem facilita la corrección de algunos errores comunes mostrando mensajes
+en cada reserva o liberación de memoria, y terminando el programa en
+cualquier intento de liberar memoria no reservada o memoria ya liberada
+anteriormente. Por defecto, todos los mensajes de Cmem se envían a la
+salida de error estándar, aunque pueden ser redirigidos a un archivo si
+fuera necesario.
+
+Para usar Cmem en un programa hay que hacer los siguientes cambios en
+el código:
+
+1. Incluir el fichero de cabecera "cmem.h" en los ficheros donde se use
+cualquiera de las funciones malloc(), realloc() o free().
+
+2. Sustituir las llamadas a malloc(), realloc() o free() por sus
+equivalentes en Cmem: cmem_malloc(), cmem_realloc() y cmem_free().
+
+3. Compilar los programas modificados junto con el archivo "cmem.c".
+
+Por defecto, la presentación automática de mensajes cada vez que se
+reserva y libera memoria está desactivada. Para activar (o desactivar)
+la presentación automática de mensajes, en cualquier punto del programa
+donde se necesite, hay que utilizar las siguientes macros:
+
+...
+cmem_enable_messages(); /* activa la presentación de mensajes */
+...
+cmem_disable_messages(); /* desactiva de nuevo la emisión de mensajes */
+...
+
+Independientemente de si está activada o no la presentación de mensajes,
+en todo momento puede conocerse la cantidad total de memoria reservada
+por el programa con la llamada:
+
+cmem_info(); /* presenta el resumen del total de memoria reservada */
+
+Si se necesita información de la cantidad de memoria ocupada por todas
+las unidades de memoria reservadas por el programa en un momento dado,
+puede obtenerse una lista llamando a:
+
+cmem_info_ext(); /* presenta el identificador y cantidad de memoria ocupada
+ por cada uno de los elementos pendientes de liberar */
+
+Para hacer que el programa escriba los mensajes en un archivo en lugar
+de enviarlos a la salida estándar de error, basta con llamar a la macro
+cmem_enable_file(), enviando como argumento el nombre del archivo, así:
+
+...
+cmem_enable_file("nombrearch.txt"); /* redirige los mensajes al archivo */
+...
+cmem_disable_file(); /* sigue enviando mensajes a la salida de error */
+...
+
+La terminación automática del programa cuando falla cmem_free() puede
+desactivarse (o activarse otra vez) utilizando las siguientes macros:
+
+...
+cmem_disable_exit_on_error(); /* el programa no termina si falla al liberar */
+...
+cmem_enable_exit_on_error(); /* el programa termina si falla al liberar */
+...
+
+Independientemente de si está activada o no la presentación de mensajes,
+puede anularse completamente el procesamiento de las funciones de Cmem,
+una vez finalizadas las pruebas, sin necesidad de restaurar manualmente
+las llamadas a cmem_malloc(), cmem_realloc() y cmem_free(), definiendo
+la variable del preprocesador NCMEM en los archivos del programa que
+llamen a las funciones de Cmem, antes de cargar el archivo "cmem.h",
+de una forma similar a lo que se hace para deshabilitar las llamadas a
+la macro assert():
+
+...
+#define NCMEM
+#include "cmem.h"
+...
+
+El resto de macros enable/disable también se anulan convenientemente
+cuando está presente NCMEM, de forma que tampoco es necesario eliminarlas
+del código para evitar que consuman tiempo de proceso.
+
+Eso es todo, feliz seguimiento de errores y... ¡que lo disfrutes!
+

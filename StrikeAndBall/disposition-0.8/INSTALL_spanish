@@ -1,0 +1,25 @@
+Instrucciones para instalar Disposition 0.8
+
+Primero:
+	make
+
+Segundo (siendo root):
+	make install
+
+Lo cual hace una copia del programa "disp" en el directorio
+/usr/local/bin.
+
+Para instalar el programa, basta ejecutar (siendo root):
+	make uninstall
+
+Para instalar la biblioteca y los archivos de cabecera, ejecutar
+(siendo root):
+	make install-dev
+
+Lo cual hace una copia de los archivos de cabecera en el directorio
+/usr/local/include y una copia del archivo de la biblioteca en el
+directorio /usr/local/lib.
+
+Para desinstalar la biblioteca y las cabeceras, ejecutar (siendo root):
+	make uninstall-dev
+

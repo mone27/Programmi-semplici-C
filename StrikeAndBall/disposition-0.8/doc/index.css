@@ -1,0 +1,43 @@
+body {
+	background-color: #eee;
+	margin-left: 1em;
+	margin-right: 1em;
+}
+h1 {
+	border-bottom: solid black 1px;
+	margin-bottom: 0;
+}
+div#cont {
+	position: absolute;
+	margin-left: 2em;
+	margin-right: 2em;
+	z-index: 2;
+}
+div#chars {
+	position: fixed;
+	text-align: center;
+	font-family: monospace;
+	color: #ccc;
+	width: 100%;
+	z-index: 1;
+}
+table.terms {
+	margin-left: auto;
+	margin-right: auto;
+}
+table.terms td { vertical-align: top; }
+pre.term {
+	color: #eee;
+	background-color: #444;
+	font-family: monospace;
+	padding: 1em;
+}
+div.wterm pre.term, pre.vim {
+	width: 50em;
+	margin-left: auto;
+	margin-right: auto;
+}
+div#lang {
+	text-align: right;
+}
+

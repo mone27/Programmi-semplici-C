@@ -1,0 +1,22 @@
+Installation instructions for Disposition 0.8
+
+First:
+	make
+
+Second (as root):
+	make install
+
+Which makes a copy of the program "disp" in the directory /usr/local/bin.
+
+If you want to uninstall the program, run (as root):
+	make uninstall
+
+To install the library and the header files, run (as root):
+	make install-dev
+
+Which makes a copy of the header files in the directory /usr/local/include
+and a copy of the library file in the directory /usr/local/lib.
+
+If you want to uninstall the library, run (as root):
+	make uninstall-dev
+
