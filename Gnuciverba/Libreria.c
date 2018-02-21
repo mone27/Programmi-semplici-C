@@ -6,10 +6,33 @@
 
 //==================================================================
 //==================================================================
-//Funzione per ordinare in ordine alfabetico un vettore di stringhe
+//Funzione per stampare le caselle del cruciverba
 //==================================================================
 //==================================================================
 
+//funzione che prende in input la tabella cruciverba e la stampa
+void stampaCruciverba(const char tab[RIGHE+2][COLONNE+2]){
+  int a,b;
+
+  //stampo caratteri tabella
+  for(a=0;a<RIGHE+2;a++){
+    for(b=0;b<COLONNE+2;b++)
+      if('\0'==tab[a][b])  //se e' un carattere di terminazione 
+	putchar('#');  //lo sostituisco con #
+      else
+	putchar(tab[a][b]);
+    putchar('\n');
+  }
+  
+  return;
+}
+
+
+//==================================================================
+//==================================================================
+//Funzione per ordinare in ordine alfabetico un vettore di stringhe
+//==================================================================
+//==================================================================
 
 //funzione che prendendo in input un vettore di stringhe lo ordina
 //in ordine alfabetico con metodo bubble sort ottimizzato
