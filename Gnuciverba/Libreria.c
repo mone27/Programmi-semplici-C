@@ -1,3 +1,8 @@
+//Includo dipendenze
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
 
 //==================================================================
 //==================================================================
@@ -5,9 +10,12 @@
 //==================================================================
 //==================================================================
 
+
 //funzione che prendendo in input un vettore di stringhe lo ordina
 //in ordine alfabetico con metodo bubble sort ottimizzato
 void ordina_stringhe( char ** stringa, const int nStringhe){
+  void sscambia( char ** stringa1, char ** stringa2);
+  void rendi_maiuscola(const char * const stringa, char * const maiuscola);
   int i,j;
 
   for(i=0; i < nStringhe-1 ;i++)//per ogni passaggio

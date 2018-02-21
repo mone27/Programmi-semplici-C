@@ -36,6 +36,7 @@ int main() {
 
 //matrice di stringhe, meno personalizzabile di un vettore di vettori di stringhe ma molto piu' comoda da dichiarare
 //per far riferimento a PRIVACY occorre chiamare dizionario[4][6] senza alcun operatore di risoluzione.
+#ifdef LINUX
 char *dizionario[7][15]={
 {"GNU","TUX","LUG","MIT","GCC","GPG","APT","NSA","GIT","FSF","EFF","USB"},
 {"ARCH","RUST","JAVA","HTML","SUDO","ROOT","SNAP","KALI","WINE"},
@@ -45,3 +46,4 @@ char *dizionario[7][15]={
 {"TORVALDS","STALLMAN","GUARDIAN"},
 {"RASPBERRY","WIKILEAKS","CANONICAL"}
 };
+#endif 
