@@ -1,8 +1,9 @@
 # Obbiettivi progetto
 Lo scopo del programma GeneratoreDiCruciverba.c e' quello di creare un cruciverba di dimensioni
-variabili utilizzando un dizionario. Il dizionario e' una collezione di vettori di stringhe che
-contengono parole della stessa lunghezza. L'algoritmo da implementare per il momento potrebbe
-essere espresso cosi' sotto forma di *pseudocodice*:
+variabili utilizzando un dizionario (una matrice di stringhe che ha per righe i gruppi di parole in
+funzione della loro lunghezza e per colonne le parole stesse).
+L'algoritmo da implementare per il momento potrebbe essere espresso cosi' sotto forma di *pseudocodice*:
+
 1  Data una matrice char n+1 x m+1
 2  inizializzata a spazio e con caratteri di terminazione lungo la riga n e colonna m
 3  fintanto che non sono arrivato alla riga con tutti caratteri di terminazione
@@ -23,8 +24,11 @@ una nuova combinazione.
 Invece di utilizzare il backtrack potrebbe invece rivelarsi utile utilizzare come espediente quello
 di porre una parola piu' breve per far si che non capitino combinazioni fuori dizionario.
 
+## Cose da fare:
+   * Creare l'algoritmo che permette il riempimento (per righe) della matrice senza considerare le colonne
+   * Aggiungere l'algoritmo per regolare gli incroci in verticale
   
-  
+
   
   
     	    
