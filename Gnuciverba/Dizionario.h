@@ -37,13 +37,17 @@ int main() {
 //matrice di stringhe, meno personalizzabile di un vettore di vettori di stringhe ma molto piu' comoda da dichiarare
 //per far riferimento a PRIVACY occorre chiamare dizionario[4][6] senza alcun operatore di risoluzione.
 #ifdef LINUX
-char *dizionario[7][15]={
-{"GNU","TUX","LUG","MIT","GCC","GPG","APT","NSA","GIT","FSF","EFF","USB"},
-{"ARCH","RUST","JAVA","HTML","SUDO","ROOT","SNAP","KALI","WINE"},
-{"LINUS","LINUX","UNIX","PRISM","APPLE"},
-{"DISTRO","FEDORA","DEBIAN","KERNEL","PACMAN","GITHUB","OLIMEX","GENTOO","JULIAN","EDWARD","UBUNTU"},
-{"RICHARD","MRROBOT","ASSANGE","WINDOWS","SNOWDEN","TEMPORA","PRIVACY","KUBUNTU","XUBUNTU"},
-{"TORVALDS","STALLMAN","GUARDIAN"},
-{"RASPBERRY","WIKILEAKS","CANONICAL"}
-};
+ 
+  #define NPAROLE 15  //Numero di parole per ogni lunghezza
+  #define LPAROLE 7   //Nuero di lunghezze di parole
+
+  char *dizionario[LPAROLE][NPAROLE]={
+  {"GNU","TUX","LUG","MIT","GCC","GPG","APT","NSA","GIT","FSF","EFF","USB"},
+  {"ARCH","RUST","JAVA","HTML","SUDO","ROOT","SNAP","KALI","WINE"},
+  {"LINUS","LINUX","UNIX","PRISM","APPLE"},
+  {"DISTRO","FEDORA","DEBIAN","KERNEL","PACMAN","GITHUB","OLIMEX","GENTOO","JULIAN","EDWARD","UBUNTU"},
+  {"RICHARD","MRROBOT","ASSANGE","WINDOWS","SNOWDEN","TEMPORA","PRIVACY","KUBUNTU","XUBUNTU"},
+  {"TORVALDS","STALLMAN","GUARDIAN"},
+  {"RASPBERRY","WIKILEAKS","CANONICAL"}
+  };
 #endif 

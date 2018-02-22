@@ -2,6 +2,90 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
+#include <stdlib.h>
+
+
+
+//==================================================================
+//==================================================================
+//Funzioni per estrarre parole dal dizionario al cruciverba
+//==================================================================
+//==================================================================
+
+//funzione che estrae una parola di lunghezza assegnata dal dizionario e la restituisce direttamente
+char * sorteggiaParola(const int lunghezza){
+  srand(time(NULL));
+  return dizionario[lunghezza-3][rand()%NPAROLE];
+  
+}
+
+//funzione che restituisce una lunghezza tra 3 e max
+int sorteggiaLunghezza(int max){
+  srand(time(NULL));
+  
+  max-=3;
+  return rand()%max+3;
+}
+
+//funzione che estrai una parola casuale di lunghezza massima uguale a max
+char * parola(const int max){
+  return sorteggiaParola(sorteggiaLunghezza(max));
+}
+
+
+//==================================================================
+//==================================================================
+//Funzione per copiare parole dal dizionario al cruciverba
+//==================================================================
+//==================================================================
+
+//funzione che copia una stringa del dizionario nel cruciverba in orizzontale
+//ATTENZIONE: la funzione deve essere chiamata solo se si e' sicuri che la stringa entri nella tabella
+void copiaNelCruciverba(const char * const stringa,const int riga, const int colonna){
+  int a;
+  
+  //per ogni locazione della stringa
+  for(a=0;'\0'!=stringa[a];a++)
+    //se non scrivo su un carattere di terminazione
+    if('\0'==cruciverba[riga][colonna+a])
+      printf("Errore: tentata scrittura su carattere di terminazione");
+    else
+      cruciverba[riga][colonna+a]=stringa[a];  //copio normalmente
+
+  //copio anche carattere di terminazione (quadratino nero nel cruciverba finito)
+  cruciverba[riga][colonna+a]='\0'; 
+  
+  return;
+}
+
+
+//==================================================================
+//==================================================================
+//Funzioni per contare le caselle del cruciverba
+//==================================================================
+//==================================================================
+
+//funzione che conta quante caselle ci sono tra la casella attuale (compresa) e il primo carattere di terminazione 
+int contaVerticale(const int riga,const int colonna){
+  int a;
+
+  //scorro in verticale finche non trovo il carattere di terminazione
+  for(a=riga;'\0'!=cruciverba[a][colonna];a++);
+  
+  return a-riga;
+}
+
+
+//funzione che conta quante caselle ci sono tra la casella attuale (compresa) e il primo carattere di terminazione 
+int contaOrizzontale(const int riga,const int colonna){
+  int a;
+
+  //scorro in verticale finche non trovo il carattere di terminazione
+  for(a=colonna;'\0'!=cruciverba[riga][a];a++);
+  
+  return a-colonna;
+}
 
 
 //==================================================================
@@ -11,16 +95,16 @@
 //==================================================================
 
 //funzione che prende in input la tabella cruciverba e la stampa
-void stampaCruciverba(const char tab[RIGHE+2][COLONNE+2]){
+void stampaCruciverba(){
   int a,b;
 
   //stampo caratteri tabella
   for(a=0;a<RIGHE+2;a++){
     for(b=0;b<COLONNE+2;b++)
-      if('\0'==tab[a][b])  //se e' un carattere di terminazione 
+      if('\0'==cruciverba[a][b])  //se e' un carattere di terminazione 
 	putchar('#');  //lo sostituisco con #
       else
-	putchar(tab[a][b]);
+	putchar(cruciverba[a][b]);
     putchar('\n');
   }
   
@@ -86,3 +170,4 @@ void sscambia( char ** stringa1, char ** stringa2){  //testata e funzionante
 }
 
 //==================================================================
+
