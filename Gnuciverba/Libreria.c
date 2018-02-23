@@ -4,8 +4,80 @@
 #include <ctype.h>
 #include <time.h>
 #include <stdlib.h>
+#include "Dizionario.h" //definisce la corretta matrice dizionario
+char cruciverba[RIGHE+2][COLONNE+2]; //matrice che rappresenta il cruciverba
 
+//==================================================================
+//==================================================================
+//Funzioni per controllare se esistono le parole nel cruciverba
+//==================================================================
+//==================================================================
 
+//funzione che determina se una stringa orizzontale del cruciverba
+//sia presente nel dizionario o meno
+int vediSeEsisteO(const int x,int y){
+  char appoggio[LPAROLE+3];//al massimo trattero parole di lunghezza LPAROLE+2 ma parlando di stringhe aggiungo+1 per c.t.
+  int c,trovato;
+
+  //torno indietro a inizio parola qualora non ci fossi gia
+  while('\0'!=cruciverba[x][y-1])
+    y--;
+    
+  //copio la parola in appoggio
+  for(c=0;'\0'!=cruciverba[x][y+c] && ' '!=cruciverba[x][c+y];c++)
+    appoggio[c]=cruciverba[x][y+c];
+  appoggio[c]='\0';
+  puts(appoggio);
+  trovato=0;
+    
+  if(strlen(appoggio)<3)//se la parola e' lunga 1 o 2 
+    trovato=1;//tutto apposto
+  
+  if(strlen(appoggio)>LPAROLE+2){
+    puts("Errore: nel cruciverba ce una parola piu lunga del dizionario");
+    trovato=1;//proviamo a limitare i danni...
+  }
+  
+  //cerco se esiste la parola nel dizionario 
+  for(c=0;c<NPAROLE && !trovato;c++) 
+    if(0==strcmp(dizionario[strlen(appoggio)-3][c],appoggio))//comparo tutte le stringhe della stessa lunghezza
+      trovato=1;
+  
+  return trovato;
+}
+
+//funzione che determina se una stringa verticale del cruciverba
+//sia presente nel dizionario o meno
+int vediSeEsisteV(int x, const int y){
+  char appoggio[LPAROLE+3];//al massimo trattero parole di lunghezza LPAROLE+2 ma parlando di stringhe aggiungo+1 per c.t.
+  int c,trovato;
+
+  //torno indietro a inizio parola qualora non ci fossi gia
+  while('\0'!=cruciverba[x-1][y])
+    x--;
+  
+  //copio la parola in appoggio
+  for(c=0;'\0'!=cruciverba[x+c][y] && ' '!=cruciverba[x+c][y];c++)
+    appoggio[c]=cruciverba[x+c][y];
+  appoggio[c]='\0';
+  puts(appoggio);
+  trovato=0;
+  
+  if(strlen(appoggio)<3)//se la parola e' lunga 1 o 2 
+    trovato=1;//tutto apposto
+  puts("si3");
+  if(strlen(appoggio)>LPAROLE+2){
+    puts("Errore: nel cruciverba ce una parola piu lunga del dizionario");
+    trovato=1;//proviamo a limitare i danni...
+  }
+
+  //cerco se esiste la parola nel dizionario 
+  for(c=0;c<NPAROLE && !trovato;c++) 
+    if(0==strcmp(dizionario[strlen(appoggio)-3][c],appoggio))//comparo tutte le stringhe della stessa lunghezza
+      trovato=1;
+  
+  return trovato;
+}
 
 //==================================================================
 //==================================================================
@@ -13,24 +85,54 @@
 //==================================================================
 //==================================================================
 
+//stringhe per restituire carattere jolly
+char unchar[2]="*";
+char duechar[3]="**";
+
 //funzione che estrae una parola di lunghezza assegnata dal dizionario e la restituisce direttamente
 char * sorteggiaParola(const int lunghezza){
-  srand(time(NULL));
   return dizionario[lunghezza-3][rand()%NPAROLE];
   
 }
 
 //funzione che restituisce una lunghezza tra 3 e max
 int sorteggiaLunghezza(int max){
-  srand(time(NULL));
+  int n;
   
-  max-=3;
-  return rand()%max+3;
+  //evito di richiedere parole di una lunghezza non supportata
+  if(max>LPAROLE+2)
+    max=LPAROLE+2;//(+2 perche salto le parole di una e due lettere nel dizionario)
+
+  if(3==max)
+    n=3;//c'e' poco da sorteggiare...
+  else{
+    max=max-2;// 
+    n=rand()%max+3;//non restituisco l'indice ma la lunghezza della parola
+  }
+  return n;
 }
 
 //funzione che estrai una parola casuale di lunghezza massima uguale a max
 char * parola(const int max){
-  return sorteggiaParola(sorteggiaLunghezza(max));
+  char *ptr;
+  
+  if(0==max)
+    puts("Errore: passato argomento zero a parola(int max)");
+  
+  //se richiedo una parola di uno o due caratteri metto il carattere jolly
+  else if(2==max)
+    ptr=duechar;
+  else if(1==max)
+    ptr=unchar;
+  
+  else{
+    ptr=sorteggiaParola(sorteggiaLunghezza(max));
+  
+    if(0==ptr)  //utile solo fintanto che il dizionario non e' ancora terminato
+      ptr=parola(max);
+  }
+  
+  return ptr;
 }
 
 
@@ -90,9 +192,28 @@ int contaOrizzontale(const int riga,const int colonna){
 
 //==================================================================
 //==================================================================
-//Funzione per stampare le caselle del cruciverba
+//Funzioni per stampare le caselle del cruciverba
 //==================================================================
 //==================================================================
+
+
+//funzione che prende in input la tabella cruciverba e stampa solo i caratteri di terminazione
+void stampaCruciverbaVuoto(){
+  int a,b;
+
+  //stampo caratteri tabella
+  for(a=0;a<RIGHE+2;a++){
+    for(b=0;b<COLONNE+2;b++)
+      if('\0'==cruciverba[a][b])  //se e' un carattere di terminazione 
+	putchar('#');  //lo sostituisco con #
+      else
+	putchar(' ');
+    putchar('\n');
+  }
+  
+  return;
+}
+
 
 //funzione che prende in input la tabella cruciverba e la stampa
 void stampaCruciverba(){

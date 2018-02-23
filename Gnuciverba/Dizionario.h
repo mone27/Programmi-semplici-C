@@ -1,33 +1,3 @@
-/*
-//vettore di vettori di stringhe (abbandonato per scomodita di inizializzazione)
-//Programma di prova della struttura dati
-#include <stdio.h>
-
-char *TreLettere[]={"GNU","TUX","LUG","MIT","GCC","GPG","APT","NSA","GIT","FSF","EFF","USB"};
-char *QuattroLettere[]={"ARCH","RUST","JAVA","HTML","SUDO","ROOT","SNAP","KALI","WINE"};
-char *CinqueLettere[]={"LINUS","LINUX","UNIX","PRISM","APPLE"};
-char *SeiLettere[]={"DISTRO","FEDORA","DEBIAN","KERNEL","PACMAN","GITHUB","OLIMEX","GENTOO","JULIAN","EDWARD","UBUNTU"};
-char *SetteLettere[]={"RICHARD","MRROBOT","ASSANGE","WINDOWS","SNOWDEN","TEMPORA","PRIVACY","KUBUNTU","XUBUNTU"};
-char *OttoLettere[]={"TORVALDS","STALLMAN","GUARDIAN"};
-char *NoveLettere[]={"RASPBERRY","WIKILEAKS","CANONICAL"};
-  
-int main() {
-  char **dizionario[7];
-  dizionario[0]=TreLettere;
-  dizionario[1]=QuattroLettere;
-  dizionario[2]=CinqueLettere;
-  dizionario[3]=SeiLettere;
-  dizionario[4]=SetteLettere;
-  dizionario[5]=OttoLettere;
-  dizionario[6]=NoveLettere;
-  
-  puts(*(dizionario[1]+2));
-  puts(dizionario[3][3]);
-  
-  return 0;
-}
-
-*/
 
 //===============================================================================================
 //Questo dizionario comprende parole riguardanti l'informatica, la privacy e il sistema GNU/Linux
@@ -42,12 +12,12 @@ int main() {
   #define LPAROLE 7   //Nuero di lunghezze di parole
 
   char *dizionario[LPAROLE][NPAROLE]={
-  {"GNU","TUX","LUG","MIT","GCC","GPG","APT","NSA","GIT","FSF","EFF","USB"},
-  {"ARCH","RUST","JAVA","HTML","SUDO","ROOT","SNAP","KALI","WINE"},
-  {"LINUS","LINUX","UNIX","PRISM","APPLE"},
-  {"DISTRO","FEDORA","DEBIAN","KERNEL","PACMAN","GITHUB","OLIMEX","GENTOO","JULIAN","EDWARD","UBUNTU"},
-  {"RICHARD","MRROBOT","ASSANGE","WINDOWS","SNOWDEN","TEMPORA","PRIVACY","KUBUNTU","XUBUNTU"},
-  {"TORVALDS","STALLMAN","GUARDIAN"},
-  {"RASPBERRY","WIKILEAKS","CANONICAL"}
+    {"GNU","TUX","LUG","MIT","GCC","GPG","APT","NSA","GIT","FSF","EFF","USB","NOX","UNI","TOR"},          
+    {"ARCH","RUST","JAVA","HTML","SUDO","ROOT","SNAP","KALI","LEAK","WINE","INIT","UDOO","SENX","EINK","BASH"},   
+    {"LINUS","LINUX","UNIX","PRISM","APPLE","TERES","INODE","NIXON","PUPPY","EMACS","INTEL","GNOME","ORFOX","UNITY","REDOX"}, 
+    {"DISTRO","FEDORA","DEBIAN","KERNEL","PACMAN","GITHUB","OLIMEX","GENTOO","VULCAN","EDWARD","UBUNTU","BASHRC","SCRIPT","REDHAT","APACHE"},
+    {"RICHARD","MRROBOT","PULPINO","ARDUINO","ASSANGE","WINDOWS","SNOWDEN","ANDROID","SAMSUNG","TEMPORA","IPHONEX","PRIVACY","KUBUNTU","XUBUNTU","LINEAGE"}, 
+    {"HARDWARE","SOFTWARE","TORVALDS","PARABOLA","STALLMAN","GUARDIAN","SLAKWARE","DEBUGGER","ARPSPOOF","SPOOFING","SNIFFARE","AAAAAAAA","BBBBBBBB","CCCCCCCC","DDDDDDDD"},
+    {"RASPBERRY","BACKTRACK","WIKILEAKS","CANONICAL","GNEWSENSE","ARCHLINUX","GNUICECAT","ICEWEASEL","REPLICANT","GNUSCREEN","PACCHETTO","AAAAAAAAA","BBBBBBBBB","CCCCCCCCC","DDDDDDDDD"}
   };
 #endif 
