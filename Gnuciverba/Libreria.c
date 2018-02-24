@@ -7,11 +7,48 @@
 #include "Dizionario.h" //definisce la corretta matrice dizionario
 char cruciverba[RIGHE+2][COLONNE+2]; //matrice che rappresenta il cruciverba
 
+
+//==================================================================
+//==================================================================
+//Funzione per inizializzare il cruciverba
+//==================================================================
+//==================================================================
+
+//funzione che pulisce inizializza il cruciverba a spazio
+void cruciClean(){
+  int a,b;
+  //inizializzo matrice a spazio e la riquadro con caratteri di terminazione
+  for(a=0;a<RIGHE+2;a++)//per ogni riga
+    for(b=0;b<COLONNE+2;b++)//per ogni colonna
+      if( 0==a || 0==b || RIGHE+1==a || COLONNE+1==b ) //se sto al bordo
+	cruciverba[a][b]='\0';
+      else
+	cruciverba[a][b]=' ';
+}
+
 //==================================================================
 //==================================================================
 //Funzioni per controllare se esistono le parole nel cruciverba
 //==================================================================
 //==================================================================
+
+//funzione che determina se s1 e' uguale a s2 (asterischi considerati jolly)
+//Esempio: strCompara(stringa,dizionario[lun][x]);
+int strCompara(const char * const s1,const char * const s2){
+  int a,bene;
+  bene=1;//se supero tutti i controlli s1==s2
+
+  if(strlen(s1)!=strlen(s2))//se una e' piu lunga dell'altra
+    bene=0;//di che stiamo a parla
+
+  for(a=0;a<strlen(s1);a++)//considero tutte le locazioni
+    if(s1[a]!=s2[a])//se ne becco due diverse
+      if('*'!=s1[a])//se non e' un jolly
+	bene=0;//so diverse le stringhe
+  
+  return bene;
+}
+
 
 //funzione che determina se una stringa orizzontale del cruciverba
 //sia presente nel dizionario o meno
@@ -27,7 +64,7 @@ int vediSeEsisteO(const int x,int y){
   for(c=0;'\0'!=cruciverba[x][y+c] && ' '!=cruciverba[x][c+y];c++)
     appoggio[c]=cruciverba[x][y+c];
   appoggio[c]='\0';
-  puts(appoggio);
+  
   trovato=0;
     
   if(strlen(appoggio)<3)//se la parola e' lunga 1 o 2 
@@ -40,7 +77,7 @@ int vediSeEsisteO(const int x,int y){
   
   //cerco se esiste la parola nel dizionario 
   for(c=0;c<NPAROLE && !trovato;c++) 
-    if(0==strcmp(dizionario[strlen(appoggio)-3][c],appoggio))//comparo tutte le stringhe della stessa lunghezza
+    if(strCompara(appoggio,dizionario[strlen(appoggio)-3][c]))//comparo tutte le stringhe della stessa lunghezza
       trovato=1;
   
   return trovato;
@@ -60,12 +97,12 @@ int vediSeEsisteV(int x, const int y){
   for(c=0;'\0'!=cruciverba[x+c][y] && ' '!=cruciverba[x+c][y];c++)
     appoggio[c]=cruciverba[x+c][y];
   appoggio[c]='\0';
-  puts(appoggio);
+
   trovato=0;
   
   if(strlen(appoggio)<3)//se la parola e' lunga 1 o 2 
     trovato=1;//tutto apposto
-  puts("si3");
+
   if(strlen(appoggio)>LPAROLE+2){
     puts("Errore: nel cruciverba ce una parola piu lunga del dizionario");
     trovato=1;//proviamo a limitare i danni...
@@ -73,7 +110,7 @@ int vediSeEsisteV(int x, const int y){
 
   //cerco se esiste la parola nel dizionario 
   for(c=0;c<NPAROLE && !trovato;c++) 
-    if(0==strcmp(dizionario[strlen(appoggio)-3][c],appoggio))//comparo tutte le stringhe della stessa lunghezza
+    if(strCompara(appoggio,dizionario[strlen(appoggio)-3][c]))//comparo tutte le stringhe della stessa lunghezza
       trovato=1;
   
   return trovato;
@@ -290,5 +327,33 @@ void sscambia( char ** stringa1, char ** stringa2){  //testata e funzionante
    return;
 }
 
+
 //==================================================================
+//==================================================================
+//Funzioni per l'approccio brutale (limitato e non ottimizzato)
+//==================================================================
+//==================================================================
+
+//funzione che controlla che il cruciverba sia corretto
+int cruciCheck(){
+  int bene,a,b;
+  bene=1;
+  
+  for(a=1;a<RIGHE+1 && bene;a++)//per ogni riga utile
+    for(b=1;b<COLONNE+1 && bene;b++)//per ogni colonna utile
+      if(!(vediSeEsisteV(a,b) && vediSeEsisteO(a,b)))
+	bene=0;
+  
+  return bene;
+}
+
+
+//funzione che riempie il cruciverba di parole in orizzontale casualmente
+void cruciFill(){
+  int a,b;
+  for(a=1;a<RIGHE+1;a++)//per ogni riga del cruciverba che abbia senso considerare
+    for(b=1;b<COLONNE+1;b++)//le colonne 0 e COLONNE+1 contengono caratteri di terminazione
+      if(' '==cruciverba[a][b])
+	copiaNelCruciverba(parola(contaOrizzontale(a,b)),a,b);
+}
 
