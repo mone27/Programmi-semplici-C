@@ -23,18 +23,38 @@
 */
 
 int main() {
+  time_t inizio;
+  double secondi;
+  int ore,minuti;
+  
+  //prendo il tempo ad inizio esecuzione
+  inizio= clock();
+  
+  //insemino funzione rand()
   srand(time(NULL));
   
-  //Approccio brutale per cruciverba max 9xX
+  //stampo ora di inizio esecuzione
+  printf("Esecuzione lanciata\n");
+//Inizio generazione--------------------------------------------------------
+  
+  //Approccio brutale per cruciverba
   do{
   cruciClean();
   cruciFill();
   }while(!cruciCheck());
   
   
-//Fine Programma----------------------------------------------------------
+//Fine generazione----------------------------------------------------------
   stampaCruciverbaVuoto();
   stampaCruciverba();
+  
+  //ricavo e raffino tempo di esecuzione del programma
+  secondi=(double)(clock()-inizio)/CLOCKS_PER_SEC;
+  minuti=secondi/60;
+  secondi-=(double)minuti*60;
+  ore=minuti/60;
+  minuti-=ore*60;
+  printf("Programma terminato con successo\nTempo di esecuzione: %d Ore %d Minuti %.3f Secondi\n",ore,minuti,secondi);
   return 0;
 }
 
