@@ -8,24 +8,28 @@
 
 #include "Libreria.c" //include: stdio.h, string.h, ctype.h, time.h, stdlib.h
 /* Funzioni incluse in Libreria.c
-   void stampaCruciverba(); (funzionante)
-   void stampaCruciverbaVuoto(); (funzionante)
-   void ordina_stringhe( char ** stringa, const int nStringhe); (funzionante)
-   int contaVerticale(const int riga,const int colonna); (funzionante)
-   int contaOrizzontale(const int riga,const int colonna); (funzionante)
-   void copiaNelCruciverba(const char * const stringa,const int riga, const int colonna); (funzionante)
-   char parola(int max); (funzionante)
-   int vediSeEsisteV(int x, const int y); (funzionante)
-   int vediSeEsisteO(const int x,int y); (funzionante)
-   void cruciClean(); (funzionante)
-   void cruciFill(); (funzionante)
-   int cruciCheck();
-*/
+   void stampaCruciverba();                                            (funzionante)
+   void stampaCruciverbaVuoto();                                       (funzionante)
+   char parola(int max);                                               (funzionante)
+   char * sorteggiaParola(const int lunghezza);                        (funzionante)
+   int sorteggiaLunghezza(int max);                                    (funzionante)
+   int cruciFill2();                                                   (da controllare)
+   void cruciClean();                                                  (funzionante)
+   int contaOrizzontale(const int riga,const int colonna);             (funzionante)
+   int contaVerticale(const int riga,const int colonna);               (funzionante)
+   void copiaNelCruciverbaO(stringa, riga, colonna)    <-abbreviata    (funzionante)
+   int cruciCheck();                                                   (funzionante)
+   int vediSeEsisteV(int x, const int y);                              (funzionante)
+   int vediSeEsisteO(const int x,int y);                               (funzionante)
+   int strCompara(const char * const s1,const char * const s2);        (funzionante)
+   int completaO(const int x, const int y);                            (incompleta)
+   int completaV(const int x, const int y);                            (incompleta)
+  */
 
 int main() {
   time_t inizio;
   double secondi;
-  int ore,minuti;
+  int ore,minuti,a;
   
   //prendo il tempo ad inizio esecuzione
   inizio= clock();
@@ -36,13 +40,12 @@ int main() {
   //stampo ora di inizio esecuzione
   printf("Esecuzione lanciata\n");
 //Inizio generazione--------------------------------------------------------
-  
-  //Approccio brutale per cruciverba
+
   do{
-  cruciClean();
-  cruciFill();
-  }while(!cruciCheck());
-  
+    cruciClean();
+    a=cruciFill2();
+  }while(a && !cruciCheck());
+
   
 //Fine generazione----------------------------------------------------------
   stampaCruciverbaVuoto();
