@@ -11,27 +11,6 @@ int tabUtilizzo[LPAROLE][NPAROLE]; //matrice che tiene traccia dell'utilizzo del
 
 //==================================================================
 //==================================================================
-//Funzioni per completare le parole iniziate nel cruciverba
-//==================================================================
-//==================================================================
-
-//funzione che data una posizione nel cruciverba, va a inizio parola orizzontale e se e' iniziata
-//cerca nel dizionario un possibile completamento, se lo trova lo scrive subito nel cruciverba
-int completaO(const int x, const int y){
-  //da cambiare
-  return y;
-}
-
-//funzione che data una posizione nel cruciverba, va a inizio parola verticale e se e' iniziata
-//cerca nel dizionario un possibile completamento, se lo trova lo scrive subito nel cruciverba
-int completaV(const int x, const int y){
-  //da cambiare
-  return y;
-}
-
-
-//==================================================================
-//==================================================================
 //Funzioni per copiare parole dal dizionario al cruciverba
 //==================================================================
 //==================================================================
@@ -160,51 +139,6 @@ char * parolaO(const int max){
 
 //==================================================================
 //==================================================================
-//Funzioni per l'approccio brutale (migliorato)
-//==================================================================
-//==================================================================
-
-//funzione che riempie il cruciverba scrivendo anche in verticale
-int cruciFill2(){
-  int a,b,bene;
-  char *ptr;
-  
-  //sempre tutto bene all'inizio
-  bene=1;
-  
-  //per ogni casella del cruciverba significativa
-  for(a=1;a<RIGHE+1 && bene;a++)//per ogni riga
-    for(b=1;b<COLONNE+1 && bene;b++)//per ogni colonna
-      switch(cruciverba[a][b]){
-	
-	//se e' un blocco nero skippa
-      case '\0':
-	break;
-	
-	//se e' una casella vuota
-      case ' ':
-	//inserisci una parola di almeno tre lettere in orizzontale
-	ptr=parolaO(contaOrizzontale(a,b));
-	
-	if(0!=ptr)//se la parola ha restituito effettivamente una stringa 
-	  copiaNelCruciverbaO(ptr,a,b);
-
-	//volutamente eseguo le istruzioni anche del default
-	
-	//se e' una casella con una lettera
-      default :
-	//completo la parola in orizzontale e poi in verticale se possibile o necessario
-	bene=completaO(a,b);
-	if(bene)//se quello di prima va male e quello dopo va bene avrei un falso positivo
-	  bene=completaV(a,b);
-      }
-
-  return bene;
-}
-
-
-//==================================================================
-//==================================================================
 //Funzione per inizializzare il cruciverba e la tabUtilizzo
 //==================================================================
 //==================================================================
@@ -272,7 +206,7 @@ void stampaCruciverba(){
 
 //==================================================================
 //==================================================================
-//Funzioni per controllare se esistono le parole nel cruciverba
+//Funzioni standard C modificate per leggere asterischi come jolly
 //==================================================================
 //==================================================================
 
@@ -293,6 +227,27 @@ int strCompara(const char * const s1,const char * const s2){
   return bene;
 }
 
+
+//funzione che determina se i primi n caratteri di s1 sono uguali a quelli di s2 (asterischi considerati jolly)
+//Esempio: strnCompara(stringa,dizionario[lun][x]);
+int strnCompara(const char * const s1,const char * const s2,const int n){
+  int a,bene;
+  bene=1;//se supero tutti i controlli tutto apposto
+
+  for(a=0;a<n;a++)//considero tutte le locazioni
+    if(s1[a]!=s2[a])//se ne becco due diverse
+      if('*'!=s1[a])//se non e' un jolly
+	bene=0;//so diverse le stringhe
+  
+  return bene;
+}
+
+
+//==================================================================
+//==================================================================
+//Funzioni per verificare l'esistenza di parole nel dizionario
+//==================================================================
+//==================================================================
 
 //funzione che determina se una stringa orizzontale del cruciverba
 //sia presente nel dizionario o meno
@@ -381,6 +336,108 @@ int cruciCheck(){
   return bene;
 }
 
+
+//==================================================================
+//==================================================================
+//Funzioni per completare le parole iniziate nel cruciverba
+//==================================================================
+//==================================================================
+
+//funzione che data una posizione nel cruciverba, va a inizio parola orizzontale e se e' iniziata
+//cerca nel dizionario un possibile completamento, se lo trova lo scrive subito nel cruciverba
+int completaO(const int x,const int u){
+  char appoggio[LPAROLE+3]; //al massimo trattero parole di lughezza LPAROLE+2 con carattere di terminazione escluso
+  int c,trovato,inizio,l,y,i;
+  
+  //inizializzo
+  y=u;//dovro far riferimento alle coordinate iniziali alla fine, quindi le salvo
+  trovato=0;// non so se la trovero..
+
+  //torno indietro a inizio parola qualora non ci fossi gia
+  while('\0'!=cruciverba[x][y-1])
+    y--;
+
+  //copio la parola in appoggio
+  for(c=0;'\0'!=cruciverba[x][y+c] && ' '!=cruciverba[x][c+y];c++)
+    appoggio[c]=cruciverba[x][y+c];
+  appoggio[c]='\0';
+
+  //devo sapere quanto e' lunga la parola da completare
+  l=strlen(appoggio);
+  
+  //sorteggio una lunghezza compresa tra l e LPAROLE+2 dalla quale cominciare a scandagliare il dizionario
+  do
+    inizio=sorteggiaLunghezza(LPAROLE+2);
+  while(inizio<l);
+
+  c=0;//devo provare una volta ogni lunghezza nel peggiore dei casi
+  while(!trovato && l>=3 ? c<=LPAROLE+2-l : c<=LPAROLE){//fintanto che non ho trovato come continuare la parola e non ho provato tutte le lunghezze
+    for(i=0;i<NPAROLE && !trovato;i++){//per ogni parola di quella lunghezza
+      if(strnCompara(appoggio,dizionario[inizio][i],l))//se puo' essere un suo continuo
+	trovato=1;//esco dai cicli di ricerca
+    }
+    inizio++;//eseguo ricerca con la prossima lunghezza
+    if(inizio>=LPAROLE)//se sto uscendo dalle righe della matrice dizionario
+      inizio=l;//riporto alla lunghezza della stringa da completare
+    c++;//conto un altro ciclo di non trovato
+  }
+  if(trovato){
+    copiaNelCruciverbaO(dizionario[inizio-1][i-1],x,u);
+    tabUtilizzo[inizio-1][i-1]=1; //ricordo che uso la parola
+  }
+  return trovato;
+}
+
+//funzione che data una posizione nel cruciverba, va a inizio parola verticale e se e' iniziata
+//cerca nel dizionario un possibile completamento, se lo trova lo scrive subito nel cruciverba
+int completaV(const int x, const int y){
+  //da cambiare
+  return y;
+}
+
+//==================================================================
+//==================================================================
+//Funzioni per l'approccio brutale (migliorato)
+//==================================================================
+//==================================================================
+
+//funzione che riempie il cruciverba scrivendo anche in verticale
+int cruciFill2(){
+  int a,b,bene;
+  char *ptr;
+  
+  //sempre tutto bene all'inizio
+  bene=1;
+  
+  //per ogni casella del cruciverba significativa
+  for(a=1;a<RIGHE+1 && bene;a++)//per ogni riga
+    for(b=1;b<COLONNE+1 && bene;b++)//per ogni colonna
+      switch(cruciverba[a][b]){
+	
+	//se e' un blocco nero skippa
+      case '\0':
+	break;
+	
+	//se e' una casella vuota
+      case ' ':
+	//inserisci una parola di almeno tre lettere in orizzontale
+	ptr=parolaO(contaOrizzontale(a,b));
+	
+	if(0!=ptr)//se la parola ha restituito effettivamente una stringa 
+	  copiaNelCruciverbaO(ptr,a,b);
+
+	//volutamente eseguo le istruzioni anche del default
+	
+	//se e' una casella con una lettera
+      default :
+	//completo la parola in orizzontale e poi in verticale se possibile o necessario
+	bene=completaO(a,b);
+	if(bene)//se quello di prima va male e quello dopo va bene avrei un falso positivo
+	  bene=completaV(a,b);
+      }
+
+  return bene;
+}
 
 
 //====================VECCHIE=FUNZIONI==================================================================================================================================

@@ -22,7 +22,8 @@
    int vediSeEsisteV(int x, const int y);                              (funzionante)
    int vediSeEsisteO(const int x,int y);                               (funzionante)
    int strCompara(const char * const s1,const char * const s2);        (funzionante)
-   int completaO(const int x, const int y);                            (incompleta)
+   int strnCompara(const char * const s1,const char * const s2);       (da controllare)
+   int completaO(const int x, const int y);                            (da controllare)
    int completaV(const int x, const int y);                            (incompleta)
   */
 
