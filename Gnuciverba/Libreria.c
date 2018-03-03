@@ -35,6 +35,26 @@ void copiaNelCruciverbaO(const char * const stringa,const int riga, const int co
 }
 
 
+//funzione che copia una stringa del dizionario nel cruciverba in verticalmente
+//ATTENZIONE: la funzione deve essere chiamata solo se si e' sicuri che la stringa entri nella tabella
+void copiaNelCruciverbaV(const char * const stringa,const int riga, const int colonna){
+  int a;
+  
+  //per ogni locazione della stringa
+  for(a=0;'\0'!=stringa[a];a++)
+    //se non scrivo su un carattere di terminazione
+    if('\0'==cruciverba[riga+a][colonna])
+      printf("Errore: tentata scrittura su carattere di terminazione");
+    else
+      cruciverba[riga+a][colonna]=stringa[a];  //copio normalmente
+
+  //copio anche carattere di terminazione (quadratino nero nel cruciverba finito)
+  cruciverba[riga+a][colonna]='\0'; 
+  
+  return;
+}
+
+
 //==================================================================
 //==================================================================
 //Funzioni per contare le caselle del cruciverba
@@ -345,62 +365,157 @@ int cruciCheck(){
 
 //funzione che data una posizione nel cruciverba, va a inizio parola orizzontale e se e' iniziata
 //cerca nel dizionario un possibile completamento, se lo trova lo scrive subito nel cruciverba
-int completaO(const int x,const int u){
+int completaO(const int x, const int y){
   char appoggio[LPAROLE+3]; //al massimo trattero parole di lughezza LPAROLE+2 con carattere di terminazione escluso
-  int c,trovato,inizio,l,y,i;
+  int c,trovato,inizio,l,u,i,j,spazio,cond;
   
   //inizializzo
-  y=u;//dovro far riferimento alle coordinate iniziali alla fine, quindi le salvo
-  trovato=0;// non so se la trovero..
+  u=y;//dovro far riferimento alle coordinate iniziali alla fine, quindi le salvo
+  trovato=0;// non so se la trovero...
 
   //torno indietro a inizio parola qualora non ci fossi gia
-  while('\0'!=cruciverba[x][y-1])
-    y--;
+  while('\0'!=cruciverba[x][u-1])
+    u--;
 
+  //devo sapere quanto spazio ho 
+  spazio=contaOrizzontale(x,u);
+
+  if(spazio<3)
+    trovato=0;//parole piu corte di 3 lettere vanno sempre bene
+  
   //copio la parola in appoggio
-  for(c=0;'\0'!=cruciverba[x][y+c] && ' '!=cruciverba[x][c+y];c++)
-    appoggio[c]=cruciverba[x][y+c];
+  for(c=0;'A'<=cruciverba[x][u+c] && 'Z'>=cruciverba[x][u+c];c++)
+    appoggio[c]=cruciverba[x][u+c];
   appoggio[c]='\0';
 
   //devo sapere quanto e' lunga la parola da completare
   l=strlen(appoggio);
-  
-  //sorteggio una lunghezza compresa tra l e LPAROLE+2 dalla quale cominciare a scandagliare il dizionario
+
+  //sorteggio una lunghezza NON INDICE compresa tra l e spazio (disponibile) dalla quale cominciare a scandagliare il dizionario
   do
-    inizio=sorteggiaLunghezza(LPAROLE+2);
+    inizio=sorteggiaLunghezza(spazio);
   while(inizio<l);
 
+  //imposto condizione in funzione della lunghezza della parola da continuare
+  if(l>=3)
+    cond=spazio-l+1;
+  else
+    cond=spazio-2;
+
   c=0;//devo provare una volta ogni lunghezza nel peggiore dei casi
-  while(!trovato && l>=3 ? c<=LPAROLE+2-l : c<=LPAROLE){//fintanto che non ho trovato come continuare la parola e non ho provato tutte le lunghezze
+  while(!trovato && c<cond){//fintanto che non ho trovato come continuare la parola e non ho provato tutte le lunghezze ammissibili
+    
+    j=rand()%NPAROLE;//faccio in modo che non appaiano sono i risultati di inizio vettore
+    
     for(i=0;i<NPAROLE && !trovato;i++){//per ogni parola di quella lunghezza
-      if(strnCompara(appoggio,dizionario[inizio][i],l))//se puo' essere un suo continuo
+      j++;//questa cosa accadra i volte
+      if(j>=NPAROLE)//questa quindi al piu una...
+	j=0;
+      if(strnCompara(appoggio,dizionario[inizio-3][j],l))//se puo' essere un suo continuo
 	trovato=1;//esco dai cicli di ricerca
     }
-    inizio++;//eseguo ricerca con la prossima lunghezza
-    if(inizio>=LPAROLE)//se sto uscendo dalle righe della matrice dizionario
-      inizio=l;//riporto alla lunghezza della stringa da completare
-    c++;//conto un altro ciclo di non trovato
+    if(!trovato){
+      inizio++;//eseguo ricerca con la prossima lunghezza
+      if(inizio>spazio){//se sto uscendo dalle righe della matrice dizionario
+	if(l<3)//riporto alla lunghezza della stringa da completare
+	  inizio=3;
+	else
+	  inizio=l;
+      }
+      c++;//conto un altro ciclo di non trovato
+    }
   }
+
+  //se ho trovato la parola la scrivo
   if(trovato){
-    copiaNelCruciverbaO(dizionario[inizio-1][i-1],x,u);
-    tabUtilizzo[inizio-1][i-1]=1; //ricordo che uso la parola
+    copiaNelCruciverbaO(dizionario[inizio-3][j],x,u);
+    tabUtilizzo[inizio-3][j]=1; //ricordo che uso la parola
   }
+ 
   return trovato;
 }
+
 
 //funzione che data una posizione nel cruciverba, va a inizio parola verticale e se e' iniziata
 //cerca nel dizionario un possibile completamento, se lo trova lo scrive subito nel cruciverba
 int completaV(const int x, const int y){
-  //da cambiare
-  return y;
+  char appoggio[LPAROLE+3]; //al massimo trattero parole di lughezza LPAROLE+2 con carattere di terminazione escluso
+  int c,trovato,inizio,l,u,i,j,spazio,cond;
+  
+  //inizializzo
+  u=x;//dovro far riferimento alle coordinate iniziali alla fine, quindi le salvo
+  trovato=0;// non so se la trovero...
+
+  //torno indietro a inizio parola qualora non ci fossi gia
+  while('\0'!=cruciverba[u-1][y])
+    u--;
+
+  //devo sapere quanto spazio ho 
+  spazio=contaVerticale(u,y);
+
+  if(spazio<3)
+    trovato=0;//parole piu corte di 3 lettere vanno sempre bene
+  
+  //copio la parola in appoggio
+  for(c=0;'A'<=cruciverba[u+c][y] && 'Z'>=cruciverba[u+c][y];c++)
+    appoggio[c]=cruciverba[u+c][y];
+  appoggio[c]='\0';
+
+  //devo sapere quanto e' lunga la parola da completare
+  l=strlen(appoggio);
+
+  //sorteggio una lunghezza NON INDICE compresa tra l e spazio (disponibile) dalla quale cominciare a scandagliare il dizionario
+  do
+    inizio=sorteggiaLunghezza(spazio);
+  while(inizio<l);
+
+  //imposto condizione in funzione della lunghezza della parola da continuare
+  if(l>=3)
+    cond=spazio-l+1;
+  else
+    cond=spazio-2;
+  
+  c=0;//devo provare una volta ogni lunghezza nel peggiore dei casi
+  while(!trovato && c<cond){//fintanto che non ho trovato come continuare la parola e non ho provato tutte le lunghezze ammissibili
+    
+    j=rand()%NPAROLE;//faccio in modo che non appaiano sono i risultati di inizio vettore
+    
+    for(i=0;i<NPAROLE && !trovato;i++){//per ogni parola di quella lunghezza
+      j++;//questa cosa accadra i volte
+      if(j>=NPAROLE)//questa quindi al piu una...
+	j=0;
+      if(strnCompara(appoggio,dizionario[inizio-3][j],l))//se puo' essere un suo continuo
+	trovato=1;//esco dai cicli di ricerca
+    }
+    if(!trovato){
+      inizio++;//eseguo ricerca con la prossima lunghezza
+      if(inizio>spazio){//se sto uscendo dalle righe della matrice dizionario
+	if(l<3)//riporto alla lunghezza della stringa da completare
+	  inizio=3;
+	else
+	  inizio=l;
+      }
+      c++;//conto un altro ciclo di non trovato
+    }
+  }
+
+  //se ho trovato la parola la scrivo
+  if(trovato){
+    copiaNelCruciverbaV(dizionario[inizio-3][j],u,y);
+    tabUtilizzo[inizio-3][j]=1; //ricordo che uso la parola
+  }
+ 
+  return trovato;
 }
+ 
+
 
 //==================================================================
 //==================================================================
-//Funzioni per l'approccio brutale (migliorato)
+//Funzione per l'approccio brutale (migliorato)
 //==================================================================
 //==================================================================
-
+/*
 //funzione che riempie il cruciverba scrivendo anche in verticale
 int cruciFill2(){
   int a,b,bene;
@@ -438,87 +553,4 @@ int cruciFill2(){
 
   return bene;
 }
-
-
-//====================VECCHIE=FUNZIONI==================================================================================================================================
-
-/*
-
-
-
-
-
-//==================================================================
-//==================================================================
-//Funzione per ordinare in ordine alfabetico un vettore di stringhe
-//==================================================================
-//==================================================================
-
-//funzione che prendendo in input un vettore di stringhe lo ordina
-//in ordine alfabetico con metodo bubble sort ottimizzato
-void ordina_stringhe( char ** stringa, const int nStringhe){
-  void sscambia( char ** stringa1, char ** stringa2);
-  void rendi_maiuscola(const char * const stringa, char * const maiuscola);
-  int i,j;
-
-  for(i=0; i < nStringhe-1 ;i++)//per ogni passaggio
-    for(j=0; j< nStringhe-1-i; j++){//per ogni stringa della matrice di stringhe
-      char appoggio1[20],appoggio2[20];
-      
-      rendi_maiuscola(stringa[j],appoggio1);
-      rendi_maiuscola(stringa[j+1],appoggio2);
-      
-      if(strcmp(appoggio1,appoggio2)>0)//se strcmp della maiuscola e' positiva
-        sscambia(&stringa[j],&stringa[j+1]);// inverto le stringhe
-    }
-  
-  return;
-}
-
-
-//funzione che copia una stringa in un altra rendendo maiuscole tutte le lettere
-void rendi_maiuscola(const char * const stringa, char * const maiuscola){  //testata e funzionante
-  int l,i;
-  l=strlen(stringa);
-
-  //per ogni locazione
-  for(i=0;i<l;i++){
-    //se ho un carattere
-    if(isalpha(stringa[i]))
-      //lo rendo maiuscolo
-      maiuscola[i]=toupper(stringa[i]);
-    else
-      maiuscola[i]=stringa[i];
-  }
-
-  return;
-}
-
-
-//funzione che scambia due puntatori a stringa in un vettore di stringhe
-//esempio chiamata: sscambia(&vettoreDiStringhe[1],&vettoreDiStringhe[2]);
-void sscambia( char ** stringa1, char ** stringa2){  //testata e funzionante
-   char *appoggio;
-   appoggio=*stringa1;
-   *stringa1=*stringa2;
-   *stringa2=appoggio;
-   return;
-}
-
-
-//==================================================================
-//==================================================================
-//Funzioni per l'approccio brutale (limitato e non ottimizzato)
-//==================================================================
-//==================================================================
-
-//funzione che riempie il cruciverba di parole in orizzontale casualmente
-void cruciFill(){
-  int a,b;
-  for(a=1;a<RIGHE+1;a++)//per ogni riga del cruciverba che abbia senso considerare
-    for(b=1;b<COLONNE+1;b++)//le colonne 0 e COLONNE+1 contengono caratteri di terminazione
-      if(' '==cruciverba[a][b])
-	copiaNelCruciverba(parola(contaOrizzontale(a,b)),a,b);
-}
-
 */

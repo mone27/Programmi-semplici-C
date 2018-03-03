@@ -2,8 +2,8 @@
 //Configurazioni
 //==============
 #define LINUX 1 //attiva dizionario LINUX
-#define COLONNE 7 //scegli numero di caselle di lunghezza del cruciverba
-#define RIGHE 5 //scegli numero di caselle di altezza del cruciverba
+#define COLONNE 10 //scegli numero di caselle di lunghezza del cruciverba7
+#define RIGHE 10 //scegli numero di caselle di altezza del cruciverba 5 
 //--------------------------------------------------------------------
 
 #include "Libreria.c" //include: stdio.h, string.h, ctype.h, time.h, stdlib.h
@@ -18,13 +18,14 @@
    int contaOrizzontale(const int riga,const int colonna);             (funzionante)
    int contaVerticale(const int riga,const int colonna);               (funzionante)
    void copiaNelCruciverbaO(stringa, riga, colonna)    <-abbreviata    (funzionante)
+   void copiaNelCruciverbaV(stringa, riga, colonna)    <-abbreviata    (funzionante)
    int cruciCheck();                                                   (funzionante)
    int vediSeEsisteV(int x, const int y);                              (funzionante)
    int vediSeEsisteO(const int x,int y);                               (funzionante)
    int strCompara(const char * const s1,const char * const s2);        (funzionante)
-   int strnCompara(const char * const s1,const char * const s2);       (da controllare)
-   int completaO(const int x, const int y);                            (da controllare)
-   int completaV(const int x, const int y);                            (incompleta)
+   int strnCompara(const char * const s1,const char * const s2);       (funzionante)
+   int completaO(const int x, const int y);                            (funzionante)
+   int completaV(const int x, const int y);                            (funzionante)
   */
 
 int main() {
@@ -46,7 +47,6 @@ int main() {
     cruciClean();
     a=cruciFill2();
   }while(a && !cruciCheck());
-
   
 //Fine generazione----------------------------------------------------------
   stampaCruciverbaVuoto();
