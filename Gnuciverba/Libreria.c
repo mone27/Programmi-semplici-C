@@ -272,7 +272,7 @@ int strnCompara(const char * const s1,const char * const s2,const int n){
 //funzione che determina se una stringa orizzontale del cruciverba
 //sia presente nel dizionario o meno
 int vediSeEsisteO(const int x,int y){
-  char appoggio[LPAROLE+3];//al massimo trattero parole di lunghezza LPAROLE+2 ma parlando di stringhe aggiungo+1 per c.t.
+  char appoggio[COLONNE+1];//piu lunghe non le potrei trovare perche non entrerebbero nella tabella
   int c,trovato;
 
   //torno indietro a inizio parola qualora non ci fossi gia
@@ -305,7 +305,7 @@ int vediSeEsisteO(const int x,int y){
 //funzione che determina se una stringa verticale del cruciverba
 //sia presente nel dizionario o meno
 int vediSeEsisteV(int x, const int y){
-  char appoggio[LPAROLE+3];//al massimo trattero parole di lunghezza LPAROLE+2 ma parlando di stringhe aggiungo+1 per c.t.
+  char appoggio[RIGHE+1];//piu lunghe non entrerebbero nel cruciverba
   int c,trovato;
 
   //torno indietro a inizio parola qualora non ci fossi gia
@@ -338,12 +338,22 @@ int vediSeEsisteV(int x, const int y){
 
 //==================================================================
 //==================================================================
-//Funzione per controllare la correttezza del cruciverba
+//Funzioni per controllare la correttezza del cruciverba
 //==================================================================
 //==================================================================
 
+//funzione da lanciare prima del cruciCheck per evitari falsi positivi dovuti agli spazi
+int cruciCheckSpazi(){
+  int bene,a,b;
+  bene=1;
+  
+  for(a=1;a<RIGHE+1 && bene;a++)//per ogni riga utile
+    for(b=1;b<COLONNE+1 && bene;b++)//per ogni colonna utile
+      if(' '==cruciverba[a][b])//se trovo uno spazio
+	bene=0;//non va bene il cruciverba
+}
 
-//funzione che controlla che il cruciverba sia corretto
+//funzione che controlla che un cruciverba senza spazi sia corretto
 int cruciCheck(){
   int bene,a,b;
   bene=1;
@@ -366,9 +376,9 @@ int cruciCheck(){
 //funzione che data una posizione nel cruciverba, va a inizio parola orizzontale e se e' iniziata
 //cerca nel dizionario un possibile completamento, se lo trova lo scrive subito nel cruciverba
 int completaO(const int x, const int y){
-  char appoggio[LPAROLE+3]; //al massimo trattero parole di lughezza LPAROLE+2 con carattere di terminazione escluso
+  char appoggio[COLONNE+1]; //parole piu grosse non entrano nel cruciverba
   int c,trovato,inizio,l,u,i,j,spazio,cond;
-  
+  puts("completaO init");
   //inizializzo
   u=y;//dovro far riferimento alle coordinate iniziali alla fine, quindi le salvo
   trovato=0;// non so se la trovero...
@@ -411,7 +421,7 @@ int completaO(const int x, const int y){
       j++;//questa cosa accadra i volte
       if(j>=NPAROLE)//questa quindi al piu una...
 	j=0;
-      if(strnCompara(appoggio,dizionario[inizio-3][j],l))//se puo' essere un suo continuo
+      if(strnCompara(appoggio,dizionario[inizio-3][j],l) && !tabUtilizzo[inizio-3][j])//se puo' essere un suo continuo e non l'ho gia usata
 	trovato=1;//esco dai cicli di ricerca
     }
     if(!trovato){
@@ -431,7 +441,7 @@ int completaO(const int x, const int y){
     copiaNelCruciverbaO(dizionario[inizio-3][j],x,u);
     tabUtilizzo[inizio-3][j]=1; //ricordo che uso la parola
   }
- 
+ puts("completaO fine");
   return trovato;
 }
 
@@ -439,7 +449,7 @@ int completaO(const int x, const int y){
 //funzione che data una posizione nel cruciverba, va a inizio parola verticale e se e' iniziata
 //cerca nel dizionario un possibile completamento, se lo trova lo scrive subito nel cruciverba
 int completaV(const int x, const int y){
-  char appoggio[LPAROLE+3]; //al massimo trattero parole di lughezza LPAROLE+2 con carattere di terminazione escluso
+  char appoggio[RIGHE+1]; //parole piu grandi non le posso trovare perche non ci entrano nella tabella
   int c,trovato,inizio,l,u,i,j,spazio,cond;
   
   //inizializzo
@@ -484,7 +494,7 @@ int completaV(const int x, const int y){
       j++;//questa cosa accadra i volte
       if(j>=NPAROLE)//questa quindi al piu una...
 	j=0;
-      if(strnCompara(appoggio,dizionario[inizio-3][j],l))//se puo' essere un suo continuo
+      if(strnCompara(appoggio,dizionario[inizio-3][j],l) && !tabUtilizzo[inizio-3][j])//se puo' essere un suo continuo e non l'ho gia usata
 	trovato=1;//esco dai cicli di ricerca
     }
     if(!trovato){
@@ -515,7 +525,7 @@ int completaV(const int x, const int y){
 //Funzione per l'approccio brutale (migliorato)
 //==================================================================
 //==================================================================
-/*
+
 //funzione che riempie il cruciverba scrivendo anche in verticale
 int cruciFill2(){
   int a,b,bene;
@@ -553,4 +563,4 @@ int cruciFill2(){
 
   return bene;
 }
-*/
+

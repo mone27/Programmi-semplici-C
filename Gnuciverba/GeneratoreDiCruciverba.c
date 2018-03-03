@@ -42,11 +42,32 @@ int main() {
   //stampo ora di inizio esecuzione
   printf("Esecuzione lanciata\n");
 //Inizio generazione--------------------------------------------------------
-
+/*
   do{
     cruciClean();
     a=cruciFill2();
   }while(a && !cruciCheck());
+*/
+  cruciClean();
+  copiaNelCruciverbaO("DEBIAN",1,1);
+  puts("LALLO");
+  completaV(1,1);
+    puts("LALLO");
+  completaV(1,2);
+
+    puts("LALLO");
+  completaV(1,3);
+
+    puts("LALLO");
+  completaV(1,4);
+
+    puts("LALLO");
+  completaV(1,5);
+
+    puts("LALLO");
+  completaV(1,6);
+
+    puts("LALLO");
   
 //Fine generazione----------------------------------------------------------
   stampaCruciverbaVuoto();
