@@ -2,8 +2,8 @@
 //Configurazioni
 //==============
 #define LINUX 1 //attiva dizionario LINUX
-#define COLONNE 10 //scegli numero di caselle di lunghezza del cruciverba7
-#define RIGHE 10 //scegli numero di caselle di altezza del cruciverba 5 
+#define COLONNE 7 //scegli numero di caselle di lunghezza del cruciverba7
+#define RIGHE 5 //scegli numero di caselle di altezza del cruciverba 5 
 //--------------------------------------------------------------------
 
 #include "Libreria.c" //include: stdio.h, string.h, ctype.h, time.h, stdlib.h
@@ -46,9 +46,8 @@ int main() {
   do{
     cruciClean();
     a=cruciFill2();
-  }while(a && !cruciCheck());
+  }while(!a && !cruciCheck());
 
-  
 //Fine generazione----------------------------------------------------------
   stampaCruciverbaVuoto();
   stampaCruciverba();

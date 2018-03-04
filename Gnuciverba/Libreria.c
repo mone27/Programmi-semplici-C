@@ -370,10 +370,13 @@ int cruciCheck(){
   int bene,a,b;
   bene=1;
   
-  for(a=1;a<RIGHE+1 && bene;a++)//per ogni riga utile
+  for(a=1;a<RIGHE+1 && bene;a++){//per ogni riga utile
     for(b=1;b<COLONNE+1 && bene;b++)//per ogni colonna utile
       if(!(vediSeEsisteV(a,b) && vediSeEsisteO(a,b)))
 	bene=0;
+      //      putchar('0'+!(vediSeEsisteV(a,b) && vediSeEsisteO(a,b)));
+    //    putchar('\n');
+  }
   
   return bene;
 }
@@ -402,11 +405,16 @@ int completaO(const int x, const int y){
   //devo sapere quanto spazio ho 
   spazio=contaOrizzontale(x,u);
 
-  if(spazio<3)
+  if(spazio<3){
     trovato=1;//parole piu corte di 3 lettere vanno sempre bene
+    if(1==spazio)
+      copiaNelCruciverbaV("*",u,y);
+    else//se invece ci sono due spazi
+      copiaNelCruciverbaV("**",u,y);//stampo un asterisco
+  }
   
   //copio la parola in appoggio
-  for(c=0;'A'<=cruciverba[x][u+c] && 'Z'>=cruciverba[x][u+c];c++)
+  for(c=0;'*'==cruciverba[u+c][y] || ('A'<=cruciverba[x][u+c] && 'Z'>=cruciverba[x][u+c]);c++)//se e' una lettera o un asterisco
     appoggio[c]=cruciverba[x][u+c];
   appoggio[c]='\0';
 
@@ -475,8 +483,13 @@ int completaV(const int x, const int y){
   //devo sapere quanto spazio ho 
   spazio=contaVerticale(u,y);
 
-  if(spazio<3)
+  if(spazio<3){
     trovato=1;//parole piu corte di 3 lettere vanno sempre bene
+    if(1==spazio)
+      copiaNelCruciverbaV("*",u,y);
+    else//se invece ci sono due spazi
+      copiaNelCruciverbaV("**",u,y);//stampo un asterisco
+  }
   
   //copio la parola in appoggio e tronco al primo spazio bianco accettando gli asterischi come jolly
   for(c=0;'*'==cruciverba[u+c][y] || ('A'<=cruciverba[u+c][y] && 'Z'>=cruciverba[u+c][y]);c++)
