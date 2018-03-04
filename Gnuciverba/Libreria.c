@@ -555,8 +555,7 @@ int completaV(const int x, const int y){
 
 //funzione che riempie il cruciverba scrivendo anche in verticale
 int cruciFill2(){
-  int a,b,bene;
-  char *ptr;
+  int a,b,l,bene;
   
   //sempre tutto bene all'inizio
   bene=1;
@@ -572,11 +571,17 @@ int cruciFill2(){
 	
 	//se e' una casella vuota
       case ' ':
-	//inserisci una parola di almeno tre lettere in orizzontale
-	ptr=parolaO(contaOrizzontale(a,b));
+	l=contaOrizzontale(a,b);
 	
-	if(0!=ptr)//se la parola ha restituito effettivamente una stringa 
-	  copiaNelCruciverbaO(ptr,a,b);
+	//inserisci una parola di almeno tre lettere in orizzontale
+	if(l<3){
+	  if(1==l)
+	    copiaNelCruciverbaO("*",a,b);
+	  else
+	    copiaNelCruciverbaO("**",a,b);
+	}
+	else
+	  copiaNelCruciverbaO(parolaO(contaOrizzontale(a,b)),a,b);
 
 	//volutamente eseguo le istruzioni anche del default
 	
