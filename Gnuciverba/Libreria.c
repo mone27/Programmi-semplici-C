@@ -196,8 +196,14 @@ void stampaCruciverbaVuoto(){
   //stampo caratteri tabella
   for(a=0;a<RIGHE+2;a++){
     for(b=0;b<COLONNE+2;b++)
-      if('\0'==cruciverba[a][b])  //se e' un carattere di terminazione 
-	putchar('#');  //lo sostituisco con #
+      if('\0'==cruciverba[a][b]){  //se e' un carattere di terminazione
+	if(0==a || RIGHE+1==a)//se prima riga o ultima
+	  putchar('-');
+        else if(0==b || COLONNE+1==b)//se prima o ultima colonna
+	  putchar('|');
+	else //se carattere di terminazione nel cruciverba
+	  putchar('#');  //lo sostituisco con #
+      }
       else
 	putchar(' ');
     putchar('\n');
@@ -220,7 +226,7 @@ void stampaCruciverba(){
 	putchar(cruciverba[a][b]);
     putchar('\n');
   }
-  
+
   return;
 }
 
@@ -280,7 +286,7 @@ int vediSeEsisteO(const int x,int y){
     y--;
     
   //copio la parola in appoggio
-  for(c=0;'\0'!=cruciverba[x][y+c] && ' '!=cruciverba[x][c+y];c++)
+  for(c=0;'\0'!=cruciverba[x][y+c];c++)
     appoggio[c]=cruciverba[x][y+c];
   appoggio[c]='\0';
   
@@ -289,15 +295,17 @@ int vediSeEsisteO(const int x,int y){
   if(strlen(appoggio)<3)//se la parola e' lunga 1 o 2 
     trovato=1;//tutto apposto
   
-  if(strlen(appoggio)>LPAROLE+2){
-    puts("Errore: nel cruciverba ce una parola piu lunga del dizionario");
-    trovato=1;//proviamo a limitare i danni...
+  if(strlen(appoggio)>LPAROLE+2){//se la parola e' piu lunga del dizionario
+    trovato=2;//risultera' come vero nella condizione del for e quindi lo saltera' ma potro' riconventirlo in 0 dopo
   }
   
   //cerco se esiste la parola nel dizionario 
   for(c=0;c<NPAROLE && !trovato;c++) 
     if(strCompara(appoggio,dizionario[strlen(appoggio)-3][c]))//comparo tutte le stringhe della stessa lunghezza
       trovato=1;
+
+  if(2==trovato)
+    trovato=0;//riconverto in zero
   
   return trovato;
 }
@@ -313,7 +321,7 @@ int vediSeEsisteV(int x, const int y){
     x--;
   
   //copio la parola in appoggio
-  for(c=0;'\0'!=cruciverba[x+c][y] && ' '!=cruciverba[x+c][y];c++)
+  for(c=0;'\0'!=cruciverba[x+c][y];c++)
     appoggio[c]=cruciverba[x+c][y];
   appoggio[c]='\0';
 
@@ -322,15 +330,17 @@ int vediSeEsisteV(int x, const int y){
   if(strlen(appoggio)<3)//se la parola e' lunga 1 o 2 
     trovato=1;//tutto apposto
 
-  if(strlen(appoggio)>LPAROLE+2){
-    puts("Errore: nel cruciverba ce una parola piu lunga del dizionario");
-    trovato=1;//proviamo a limitare i danni...
+  if(strlen(appoggio)>LPAROLE+2){//se la parola e' piu lunga del dizionario non puo' esistere
+    trovato=2;//risultera' come vero nella condizione del for e quindi lo saltera' ma potro' riconventirlo in 0 dopo
   }
 
   //cerco se esiste la parola nel dizionario 
   for(c=0;c<NPAROLE && !trovato;c++) 
     if(strCompara(appoggio,dizionario[strlen(appoggio)-3][c]))//comparo tutte le stringhe della stessa lunghezza
       trovato=1;
+
+  if(2==trovato)//reimposto valore reale di trovato
+    trovato=0;
   
   return trovato;
 }
@@ -380,7 +390,7 @@ int cruciCheck(){
 int completaO(const int x, const int y){
   char appoggio[COLONNE+1]; //parole piu grosse non entrano nel cruciverba
   int c,trovato,inizio,l,u,i,j,spazio,cond;
-  puts("completaO init");
+
   //inizializzo
   u=y;//dovro far riferimento alle coordinate iniziali alla fine, quindi le salvo
   trovato=0;// non so se la trovero...
@@ -393,7 +403,7 @@ int completaO(const int x, const int y){
   spazio=contaOrizzontale(x,u);
 
   if(spazio<3)
-    trovato=0;//parole piu corte di 3 lettere vanno sempre bene
+    trovato=1;//parole piu corte di 3 lettere vanno sempre bene
   
   //copio la parola in appoggio
   for(c=0;'A'<=cruciverba[x][u+c] && 'Z'>=cruciverba[x][u+c];c++)
@@ -428,7 +438,7 @@ int completaO(const int x, const int y){
     }
     if(!trovato){
       inizio++;//eseguo ricerca con la prossima lunghezza
-      if(inizio>spazio){//se sto uscendo dalle righe della matrice dizionario
+      if(inizio>=spazio){//se sto uscendo dalle righe della matrice dizionario
 	if(l<3)//riporto alla lunghezza della stringa da completare
 	  inizio=3;
 	else
@@ -443,7 +453,7 @@ int completaO(const int x, const int y){
     copiaNelCruciverbaO(dizionario[inizio-3][j],x,u);
     tabUtilizzo[inizio-3][j]=1; //ricordo che uso la parola
   }
- puts("completaO fine");
+
   return trovato;
 }
 
@@ -486,22 +496,24 @@ int completaV(const int x, const int y){
     cond=spazio-l+1;
   else
     cond=spazio-2;
-  
+
   c=0;//devo provare una volta ogni lunghezza nel peggiore dei casi
   while(!trovato && c<cond){//fintanto che non ho trovato come continuare la parola e non ho provato tutte le lunghezze ammissibili
     
     j=rand()%NPAROLE;//faccio in modo che non appaiano sono i risultati di inizio vettore
-    
+
     for(i=0;i<NPAROLE && !trovato;i++){//per ogni parola di quella lunghezza
       j++;//questa cosa accadra i volte
       if(j==NPAROLE)//questa quindi al piu una...
 	j=0;
+      printf("%d,%d\n",j,inizio-3);
       if(strnCompara(appoggio,dizionario[inizio-3][j],l) && !tabUtilizzo[inizio-3][j])//se puo' essere un suo continuo e non l'ho gia usata
 	trovato=1;//esco dai cicli di ricerca
     }
     if(!trovato){
+
       inizio++;//eseguo ricerca con la prossima lunghezza
-      if(inizio>spazio){//se sto uscendo dalle righe della matrice dizionario
+      if(inizio>=spazio){//se sto uscendo dalle righe della matrice dizionario
 	if(l<3)//riporto alla lunghezza della stringa da completare
 	  inizio=3;
 	else
