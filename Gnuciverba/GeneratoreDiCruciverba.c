@@ -2,7 +2,7 @@
 //Configurazioni
 //==============
 #define LINUX 1 //attiva dizionario LINUX
-#define COLONNE 7 //scegli numero di caselle di lunghezza del cruciverba7
+#define COLONNE 5 //scegli numero di caselle di lunghezza del cruciverba7
 #define RIGHE 5 //scegli numero di caselle di altezza del cruciverba 5 
 //--------------------------------------------------------------------
 
@@ -45,7 +45,7 @@ int main() {
 
   do{
     cruciClean();
-    a=cruciFill2();
+    a=cruciFill3();
   }while(!a && !cruciCheck());
 
 //Fine generazione----------------------------------------------------------
@@ -58,7 +58,7 @@ int main() {
   secondi-=(double)minuti*60;
   ore=minuti/60;
   minuti-=ore*60;
-  printf("Programma terminato con successo\nTempo di esecuzione: %d Ore %d Minuti %.3f Secondi\n",ore,minuti,secondi);
+  printf("Programma terminato con successo\nTempo di esecuzione: %d Ore %d Minuti %.3f Secondi\n\a",ore,minuti,secondi);
   return 0;
 }
 

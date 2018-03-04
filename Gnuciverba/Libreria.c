@@ -554,7 +554,8 @@ int completaV(const int x, const int y){
 //==================================================================
 
 //funzione che riempie il cruciverba scrivendo anche in verticale
-int cruciFill2(){
+//ATTENZIONE: usare questa funzione solo su cruciverba quadrati 
+int cruciFill3(){
   int a,b,l,bene;
   
   //sempre tutto bene all'inizio
@@ -591,6 +592,10 @@ int cruciFill2(){
 	bene=completaO(a,b);
 	if(bene)//se quello di prima va male e quello dopo va bene avrei un falso positivo
 	  bene=completaV(a,b);
+	if(bene)
+	  bene=completaO(b,a);
+	if(bene)
+	  bene=completaV(b,a);
       }
 
   return bene;
