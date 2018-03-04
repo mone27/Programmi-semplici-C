@@ -50,7 +50,6 @@ int main() {
 */
   cruciClean();
   copiaNelCruciverbaO("DEBIAN",1,1);
-  puts("LALLO");
   completaV(1,1);
     puts("LALLO");
   completaV(1,2);

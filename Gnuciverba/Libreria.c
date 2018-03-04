@@ -351,6 +351,8 @@ int cruciCheckSpazi(){
     for(b=1;b<COLONNE+1 && bene;b++)//per ogni colonna utile
       if(' '==cruciverba[a][b])//se trovo uno spazio
 	bene=0;//non va bene il cruciverba
+  
+  return bene;
 }
 
 //funzione che controlla che un cruciverba senza spazi sia corretto
@@ -464,10 +466,10 @@ int completaV(const int x, const int y){
   spazio=contaVerticale(u,y);
 
   if(spazio<3)
-    trovato=0;//parole piu corte di 3 lettere vanno sempre bene
+    trovato=1;//parole piu corte di 3 lettere vanno sempre bene
   
-  //copio la parola in appoggio
-  for(c=0;'A'<=cruciverba[u+c][y] && 'Z'>=cruciverba[u+c][y];c++)
+  //copio la parola in appoggio e tronco al primo spazio bianco accettando gli asterischi come jolly
+  for(c=0;'*'==cruciverba[u+c][y] || ('A'<=cruciverba[u+c][y] && 'Z'>=cruciverba[u+c][y]);c++)
     appoggio[c]=cruciverba[u+c][y];
   appoggio[c]='\0';
 
@@ -492,7 +494,7 @@ int completaV(const int x, const int y){
     
     for(i=0;i<NPAROLE && !trovato;i++){//per ogni parola di quella lunghezza
       j++;//questa cosa accadra i volte
-      if(j>=NPAROLE)//questa quindi al piu una...
+      if(j==NPAROLE)//questa quindi al piu una...
 	j=0;
       if(strnCompara(appoggio,dizionario[inizio-3][j],l) && !tabUtilizzo[inizio-3][j])//se puo' essere un suo continuo e non l'ho gia usata
 	trovato=1;//esco dai cicli di ricerca
