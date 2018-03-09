@@ -34,6 +34,24 @@ void copiaNelCruciverbaO(const char * const stringa,const int riga, const int co
   return;
 }
 
+//non sovrascrive caratteri preesistenti
+void copiaAsteriscoNelCruciverbaO(const char * const stringa,const int riga, const int colonna){
+  int a;
+  
+  //per ogni locazione della stringa
+  for(a=0;'\0'!=stringa[a];a++)
+    //se non scrivo su un carattere di terminazione
+    if('\0'==cruciverba[riga][colonna+a])
+      printf("Errore: tentata scrittura su carattere di terminazione");
+    else if(!isalpha(cruciverba[riga][colonna+a])) //se non scrivo su una lettera
+      cruciverba[riga][colonna+a]=stringa[a];  //copio normalmente
+
+  //copio anche carattere di terminazione (quadratino nero nel cruciverba finito)
+  cruciverba[riga][colonna+a]='\0'; 
+  
+  return;
+}
+
 
 //funzione che copia una stringa del dizionario nel cruciverba in verticalmente
 //ATTENZIONE: la funzione deve essere chiamata solo se si e' sicuri che la stringa entri nella tabella
@@ -46,6 +64,24 @@ void copiaNelCruciverbaV(const char * const stringa,const int riga, const int co
     if('\0'==cruciverba[riga+a][colonna])
       printf("Errore: tentata scrittura su carattere di terminazione");
     else
+      cruciverba[riga+a][colonna]=stringa[a];  //copio normalmente
+
+  //copio anche carattere di terminazione (quadratino nero nel cruciverba finito)
+  cruciverba[riga+a][colonna]='\0'; 
+  
+  return;
+}
+
+//non sovrascrivo su caratteri preesistenti
+void copiaAsteriscoNelCruciverbaV(const char * const stringa,const int riga, const int colonna){
+  int a;
+  
+  //per ogni locazione della stringa
+  for(a=0;'\0'!=stringa[a];a++)
+    //se non scrivo su un carattere di terminazione
+    if('\0'==cruciverba[riga+a][colonna])
+      printf("Errore: tentata scrittura su carattere di terminazione");
+    else if(!isalpha(cruciverba[riga+a][colonna])) //se non scrivo su una lettera
       cruciverba[riga+a][colonna]=stringa[a];  //copio normalmente
 
   //copio anche carattere di terminazione (quadratino nero nel cruciverba finito)
@@ -144,17 +180,10 @@ int sorteggiaLunghezza(int max){
 }
 
 //funzione che estrae una parola casuale dal dizionario di lunghezza massima uguale a max e lunghezza minima uguale a tre
-//restituisce null in caso max sia minore di 3
-char * parolaO(const int max){
-  char *ptr;
-
-  ptr=0; //imposto a null
-  
-  if(max>=3)
-    ptr=sorteggiaParola(sorteggiaLunghezza(max));
-    
-  return ptr;
+char * parola(const int max){
+  return sorteggiaParola(sorteggiaLunghezza(max));
 }
+
 
 
 //==================================================================
@@ -408,9 +437,9 @@ int completaO(const int x, const int y){
   if(spazio<3){
     trovato=1;//parole piu corte di 3 lettere vanno sempre bene
     if(1==spazio)
-      copiaNelCruciverbaV("*",u,y);
+      copiaAsteriscoNelCruciverbaV("*",u,y);
     else//se invece ci sono due spazi
-      copiaNelCruciverbaV("**",u,y);//stampo un asterisco
+      copiaAsteriscoNelCruciverbaV("**",u,y);//stampo un asterisco
   }
   
   //copio la parola in appoggio
@@ -486,9 +515,9 @@ int completaV(const int x, const int y){
   if(spazio<3){
     trovato=1;//parole piu corte di 3 lettere vanno sempre bene
     if(1==spazio)
-      copiaNelCruciverbaV("*",u,y);
+      copiaAsteriscoNelCruciverbaV("*",u,y);
     else//se invece ci sono due spazi
-      copiaNelCruciverbaV("**",u,y);//stampo un asterisco
+      copiaAsteriscoNelCruciverbaV("**",u,y);//stampo un asterisco
   }
   
   //copio la parola in appoggio e tronco al primo spazio bianco accettando gli asterischi come jolly
@@ -519,7 +548,6 @@ int completaV(const int x, const int y){
       j++;//questa cosa accadra i volte
       if(j==NPAROLE)//questa quindi al piu una...
 	j=0;
-      printf("%d,%d\n",j,inizio-3);
       if(strnCompara(appoggio,dizionario[inizio-3][j],l) && !tabUtilizzo[inizio-3][j])//se puo' essere un suo continuo e non l'ho gia usata
 	trovato=1;//esco dai cicli di ricerca
     }
@@ -582,7 +610,7 @@ int cruciFill3(){
 	    copiaNelCruciverbaO("**",a,b);
 	}
 	else
-	  copiaNelCruciverbaO(parolaO(contaOrizzontale(a,b)),a,b);
+	  copiaNelCruciverbaO(parola(contaOrizzontale(a,b)),a,b);
 
 	//volutamente eseguo le istruzioni anche del default
 	
