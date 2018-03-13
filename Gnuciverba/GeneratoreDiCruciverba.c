@@ -1,9 +1,9 @@
 //==============
 //Configurazioni
 //==============
-#define LINUX 1 //attiva dizionario LINUX
-#define COLONNE 9 //scegli numero di caselle di lunghezza del cruciverba7
-#define RIGHE 9 //scegli numero di caselle di altezza del cruciverba 5 
+#define GENERICO 1 //attiva dizionario LINUX
+#define COLONNE 7 //scegli numero di caselle di lunghezza del cruciverba7
+#define RIGHE 5 //scegli numero di caselle di altezza del cruciverba 5 
 //--------------------------------------------------------------------
 
 #include "Libreria.c" //include: stdio.h, string.h, ctype.h, time.h, stdlib.h
@@ -46,11 +46,11 @@ int cruciFill4(){
       
       //se la casella e' vuota
       if(' '==cruciverba[a][b]){
-	printf("Casella %d,%d vuota\t",a,b);//debug
+	//	printf("Casella %d,%d vuota\t",a,b);//debug
 	lunO=contaOrizzontale(a,b);
 	lunV=contaVerticale(a,b);
 	if(lunO>=lunV){//se ho piu' spazio libero in orizzontale
-	  printf("Ho piu spazio in orizzontale\t");//debug
+	  //       printf("Ho piu spazio in orizzontale\t");//debug
 	  if(lunO<3)//se ho una o due caselle metto un asterisco (magari in quello dopo lunV>lunO)
 	    cruciverba[a][b]='*';
 	  else
@@ -58,30 +58,32 @@ int cruciFill4(){
 	  bene=completaV(a,b);// vedo se posso dare un senso anche nell'altra dimenzione
 	}
 	else{ //se invece ho piu spazio in verticale
-	  printf("Ho piu spazio in verticale\t");//debug
-	  if(lunV<3)//se ho solo uno o due caselle metto asterischi
+	  //	  printf("Ho piu spazio in verticale\t");//debug
+	  if(lunV<3){//se ho solo uno o due caselle metto asterischi
 	    if(1==lunV)
 	      copiaAsteriscoNelCruciverbaV("*",a,b);
 	    else//se invece ci sono due spazi
 	      copiaAsteriscoNelCruciverbaV("**",a,b);
+	  }
 	  copiaNelCruciverbaV(parola(lunV),a,b);//immetto nuova parola
 	  bene=completaO(a,b);// vedo se posso dare un senso anche nell'altra dimenzione
 	}
-	putchar('\n');//debug
+	//       	putchar('\n');//debug
       }
 
       //se la casella ha una lettera
       else if(isalpha(cruciverba[a][b])){
-	printf("Casella %d,%d piena\t",a,b);//debug
+	//	printf("Casella %d,%d piena: %s\n",a,b,&cruciverba[a][b]);//debug
 	bene+=completaO(a,b);
-	printf("%d\n",bene);
+	//	printf("completaO(%d,%d)=%d\t%s\n",a,b,bene,&cruciverba[a][b]);
 	bene+=completaV(a,b);
-	printf("%d\n",bene);
+	//	printf("completaV(%d,%d)=%d\n",a,b,bene);
+	//	stampaCruciverba();
 	bene+=completaO(b,a);
-	printf("%d\n",bene);
+	//	printf("completaO(%d,%d)=%d\n",b,a,bene);
       	bene+=completaV(b,a);
-	printf("%d\n",bene);
-	if(4==bene)
+	//	printf("completaV(%d,%d)=%d\n",b,a,bene);
+	if(5==bene)//bene stava gia a 1 e ci sommo i quattro positivi delle funzioni completaX
 	  bene=1;
 	else
 	  bene=0;
@@ -109,15 +111,15 @@ int main() {
   printf("Esecuzione lanciata\n");
 //Inizio generazione--------------------------------------------------------
 
-  /*
   do{
     cruciClean();
-    a=cruciFill3();
+    a=cruciFill4();
+    if(cruciverba[4][4]!=' '){
+      puts("Cruciverba parziale:");
+      stampaCruciverba();
+    }      
   }while(!a && !cruciCheck());
-  */
-  cruciClean();
-  cruciFill4();
-  
+
 //Fine generazione----------------------------------------------------------
   stampaCruciverbaVuoto();
   stampaCruciverba();

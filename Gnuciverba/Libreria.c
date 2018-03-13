@@ -24,7 +24,7 @@ void copiaNelCruciverbaO(const char * const stringa,const int riga, const int co
   for(a=0;'\0'!=stringa[a];a++)
     //se non scrivo su un carattere di terminazione
     if('\0'==cruciverba[riga][colonna+a])
-      printf("Errore: tentata scrittura su carattere di terminazione");
+      printf("Errore copiaNelCruciverbaO: tentata scrittura di \'%c\' su carattere di terminazione [%d,%d]\n",stringa[a],riga,colonna+a);
     else
       cruciverba[riga][colonna+a]=stringa[a];  //copio normalmente
 
@@ -42,7 +42,7 @@ void copiaAsteriscoNelCruciverbaO(const char * const stringa,const int riga, con
   for(a=0;'\0'!=stringa[a];a++)
     //se non scrivo su un carattere di terminazione
     if('\0'==cruciverba[riga][colonna+a])
-      printf("Errore: tentata scrittura su carattere di terminazione");
+      printf("Errore copiaAsteriscoO: tentata scrittura di \'%c\' su carattere di terminazione [%d,%d]\n",stringa[a],riga,colonna+a);
     else if(!isalpha(cruciverba[riga][colonna+a])) //se non scrivo su una lettera
       cruciverba[riga][colonna+a]=stringa[a];  //copio normalmente
 
@@ -62,7 +62,7 @@ void copiaNelCruciverbaV(const char * const stringa,const int riga, const int co
   for(a=0;'\0'!=stringa[a];a++)
     //se non scrivo su un carattere di terminazione
     if('\0'==cruciverba[riga+a][colonna])
-      printf("Errore: tentata scrittura su carattere di terminazione");
+      printf("Errore copiaNelCruciverbaV: tentata scrittura di \'%c\' su carattere di terminazione [%d,%d]\n",stringa[a],riga+a,colonna);
     else
       cruciverba[riga+a][colonna]=stringa[a];  //copio normalmente
 
@@ -80,7 +80,8 @@ void copiaAsteriscoNelCruciverbaV(const char * const stringa,const int riga, con
   for(a=0;'\0'!=stringa[a];a++)
     //se non scrivo su un carattere di terminazione
     if('\0'==cruciverba[riga+a][colonna])
-      printf("Errore: tentata scrittura su carattere di terminazione");
+      printf("Errore copiaAsteriscoV: tentata scrittura di \'%c\' su carattere di terminazione [%d,%d]\n",stringa[a],riga+a,colonna);
+ 
     else if(!isalpha(cruciverba[riga+a][colonna])) //se non scrivo su una lettera
       cruciverba[riga+a][colonna]=stringa[a];  //copio normalmente
 
@@ -421,11 +422,12 @@ int cruciCheck(){
 //cerca nel dizionario un possibile completamento, se lo trova lo scrive subito nel cruciverba
 int completaO(const int x, const int y){
   char appoggio[COLONNE+1]; //parole piu grosse non entrano nel cruciverba
-  int c,trovato,inizio,l,u,i,j,spazio,cond;
+  int c,trovato,inizio,l,u,i,j,spazio,cond,preesistente;
 
   //inizializzo
   u=y;//dovro far riferimento alle coordinate iniziali alla fine, quindi le salvo
   trovato=0;// non so se la trovero...
+  preesistente=0; //non so se ci sta gia scritta una parola completa nel cruciverba
 
   //torno indietro a inizio parola qualora non ci fossi gia
   while('\0'!=cruciverba[x][u-1])
@@ -437,35 +439,46 @@ int completaO(const int x, const int y){
   if(spazio<3){
     trovato=1;//parole piu corte di 3 lettere vanno sempre bene
     if(1==spazio)
-      copiaAsteriscoNelCruciverbaV("*",u,y);
+      copiaAsteriscoNelCruciverbaO("*",x,u);
     else//se invece ci sono due spazi
-      copiaAsteriscoNelCruciverbaV("**",u,y);//stampo un asterisco
+      copiaAsteriscoNelCruciverbaO("**",x,u);//stampo un asterisco
+    preesistente=1;//in ogni caso non ho bisogno di eseguire la copia dopo
+  }
+
+  //non e' utile eseguire questi passaggi se ho gia stabilito che va bene
+  if(!trovato){
+    //copio la parola in appoggio
+    for(c=0;'*'==cruciverba[u+c][y] || ('A'<=cruciverba[x][u+c] && 'Z'>=cruciverba[x][u+c]);c++)//se e' una lettera o un asterisco
+      appoggio[c]=cruciverba[x][u+c];
+    appoggio[c]='\0';
+    
+    //devo sapere quanto e' lunga la parola da completare
+    l=strlen(appoggio);
+
+    //se la lunghezza coincide con la parola che trovo scritta vuol dire che e' gia completa
+    if(l==spazio){
+      preesistente=1;
+      trovato=1;
+    }
+
+    //sorteggio una lunghezza NON INDICE compresa tra l e spazio (disponibile) dalla quale cominciare a scandagliare il dizionario
+    do
+      inizio=sorteggiaLunghezza(spazio);
+    while(inizio<l);
+
+    //imposto condizione in funzione della lunghezza della parola da continuare
+    if(l>=3)
+      cond=spazio-l+1;
+    else
+      cond=spazio-2;
+    
   }
   
-  //copio la parola in appoggio
-  for(c=0;'*'==cruciverba[u+c][y] || ('A'<=cruciverba[x][u+c] && 'Z'>=cruciverba[x][u+c]);c++)//se e' una lettera o un asterisco
-    appoggio[c]=cruciverba[x][u+c];
-  appoggio[c]='\0';
-
-  //devo sapere quanto e' lunga la parola da completare
-  l=strlen(appoggio);
-
-  //sorteggio una lunghezza NON INDICE compresa tra l e spazio (disponibile) dalla quale cominciare a scandagliare il dizionario
-  do
-    inizio=sorteggiaLunghezza(spazio);
-  while(inizio<l);
-
-  //imposto condizione in funzione della lunghezza della parola da continuare
-  if(l>=3)
-    cond=spazio-l+1;
-  else
-    cond=spazio-2;
-
   c=0;//devo provare una volta ogni lunghezza nel peggiore dei casi
   while(!trovato && c<cond){//fintanto che non ho trovato come continuare la parola e non ho provato tutte le lunghezze ammissibili
     
     j=rand()%NPAROLE;//faccio in modo che non appaiano sono i risultati di inizio vettore
-    
+    //    printf("inizio=%d, j=%d, c=%d, cond=%d, spazio=%d\n",inizio,j,c,cond,spazio);//debug
     for(i=0;i<NPAROLE && !trovato;i++){//per ogni parola di quella lunghezza
       j++;//questa cosa accadra i volte
       if(j>=NPAROLE)//questa quindi al piu una...
@@ -475,7 +488,7 @@ int completaO(const int x, const int y){
     }
     if(!trovato){
       inizio++;//eseguo ricerca con la prossima lunghezza
-      if(inizio>=spazio){//se sto uscendo dalle righe della matrice dizionario
+      if(inizio>spazio){//se sto uscendo dalle righe della matrice dizionario
 	if(l<3)//riporto alla lunghezza della stringa da completare
 	  inizio=3;
 	else
@@ -486,7 +499,7 @@ int completaO(const int x, const int y){
   }
 
   //se ho trovato la parola la scrivo
-  if(trovato){
+  if(trovato && !preesistente){
     copiaNelCruciverbaO(dizionario[inizio-3][j],x,u);
     tabUtilizzo[inizio-3][j]=1; //ricordo che uso la parola
   }
@@ -499,19 +512,20 @@ int completaO(const int x, const int y){
 //cerca nel dizionario un possibile completamento, se lo trova lo scrive subito nel cruciverba
 int completaV(const int x, const int y){
   char appoggio[RIGHE+1]; //parole piu grandi non le posso trovare perche non ci entrano nella tabella
-  int c,trovato,inizio,l,u,i,j,spazio,cond;
+  int c,trovato,inizio,l,u,i,j,spazio,cond,preesistente;
   
   //inizializzo
   u=x;//dovro far riferimento alle coordinate iniziali alla fine, quindi le salvo
   trovato=0;// non so se la trovero...
-
+  preesistente=0; //non so se ci sta gia scritta una parola completa nel cruciverba per il momento
+  
   //torno indietro a inizio parola qualora non ci fossi gia
   while('\0'!=cruciverba[u-1][y])
     u--;
 
   //devo sapere quanto spazio ho 
   spazio=contaVerticale(u,y);
-
+ 
   if(spazio<3){
     trovato=1;//parole piu corte di 3 lettere vanno sempre bene
     if(1==spazio)
@@ -520,25 +534,34 @@ int completaV(const int x, const int y){
       copiaAsteriscoNelCruciverbaV("**",u,y);//stampo un asterisco
   }
   
-  //copio la parola in appoggio e tronco al primo spazio bianco accettando gli asterischi come jolly
-  for(c=0;'*'==cruciverba[u+c][y] || ('A'<=cruciverba[u+c][y] && 'Z'>=cruciverba[u+c][y]);c++)
-    appoggio[c]=cruciverba[u+c][y];
-  appoggio[c]='\0';
-
-  //devo sapere quanto e' lunga la parola da completare
-  l=strlen(appoggio);
-
-  //sorteggio una lunghezza NON INDICE compresa tra l e spazio (disponibile) dalla quale cominciare a scandagliare il dizionario
-  do
-    inizio=sorteggiaLunghezza(spazio);
-  while(inizio<l);
-
-  //imposto condizione in funzione della lunghezza della parola da continuare
-  if(l>=3)
-    cond=spazio-l+1;
-  else
-    cond=spazio-2;
-
+  //non e' utile eseguire questi passaggi se ho gia stabilito che va bene
+  if(!trovato){
+    //copio la parola in appoggio e tronco al primo spazio bianco accettando gli asterischi come jolly
+    for(c=0;'*'==cruciverba[u+c][y] || ('A'<=cruciverba[u+c][y] && 'Z'>=cruciverba[u+c][y]);c++)
+      appoggio[c]=cruciverba[u+c][y];
+    appoggio[c]='\0';
+ 
+    //devo sapere quanto e' lunga la parola da completare
+    l=strlen(appoggio);
+    
+    //se la lunghezza coincide con la parola che trovo scritta vuol dire che e' gia completa
+    if(l==spazio){
+      preesistente=1;
+      trovato=1;
+    }
+ 
+    //sorteggio una lunghezza NON INDICE compresa tra l e spazio (disponibile) dalla quale cominciare a scandagliare il dizionario
+    do
+      inizio=sorteggiaLunghezza(spazio);
+    while(inizio<l);
+    
+    //imposto condizione in funzione della lunghezza della parola da continuare
+    if(l>=3)
+      cond=spazio-l+1;
+    else
+      cond=spazio-2;
+  }
+ 
   c=0;//devo provare una volta ogni lunghezza nel peggiore dei casi
   while(!trovato && c<cond){//fintanto che non ho trovato come continuare la parola e non ho provato tutte le lunghezze ammissibili
     
@@ -565,7 +588,7 @@ int completaV(const int x, const int y){
   }
 
   //se ho trovato la parola la scrivo
-  if(trovato){
+  if(trovato && !preesistente){
     copiaNelCruciverbaV(dizionario[inizio-3][j],u,y);
     tabUtilizzo[inizio-3][j]=1; //ricordo che uso la parola
   }
