@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include <time.h>
 #include <stdlib.h>
-#include "Dizionario.h" //definisce la corretta matrice dizionario
+#include "Dizionario.c" //definisce la corretta matrice dizionario
 char cruciverba[RIGHE+2][COLONNE+2]; //matrice che rappresenta il cruciverba
 int tabUtilizzo[LPAROLE][NPAROLE]; //matrice che tiene traccia dell'utilizzo delle parole del dizionario: 0 non usata, 1 gia' usata;
 
@@ -440,7 +440,7 @@ int completaO(const int x, const int y){
     trovato=1;//parole piu corte di 3 lettere vanno sempre bene
     if(1==spazio)
       copiaAsteriscoNelCruciverbaO("*",x,u);
-    else//se invece ci sono due spazi
+    else if(2==spazio)//se invece ci sono due spazi
       copiaAsteriscoNelCruciverbaO("**",x,u);//stampo un asterisco
     preesistente=1;//in ogni caso non ho bisogno di eseguire la copia dopo
   }
@@ -448,17 +448,31 @@ int completaO(const int x, const int y){
   //non e' utile eseguire questi passaggi se ho gia stabilito che va bene
   if(!trovato){
     //copio la parola in appoggio
-    for(c=0;'*'==cruciverba[u+c][y] || ('A'<=cruciverba[x][u+c] && 'Z'>=cruciverba[x][u+c]);c++)//se e' una lettera o un asterisco
+    for(c=0;'\0'!=cruciverba[x][u+c];c++)//copio tutta la stringa fino al carattere di terminazione
       appoggio[c]=cruciverba[x][u+c];
     appoggio[c]='\0';
+
+    //scorro da fine stringa alla ricerca del primo carattere non spazio
+    while(' '==appoggio[--c]); //c all'inizio su c.t. quindi deincremento e poi considero
+
+    //imposto la fine della stringa dopo l'ultimo carattere non spazio
+    appoggio[c+1]='\0';//quando esco dal while c punta all'ultimo carattere letterale che non voglio sovrascrivere (+1)
+
+    //jollificazione degli spazi infraparola
+    while(-1!=--c)//per ogni carattere letterale precedente all'ultimo
+      if(' '==appoggio[c])//se incontro uno spazio
+	appoggio[c]='*';//lo jollifico perche vuol dire che se non l'ho scritto finora non incrocia con nulla
     
     //devo sapere quanto e' lunga la parola da completare
     l=strlen(appoggio);
 
-    //se la lunghezza coincide con la parola che trovo scritta vuol dire che e' gia completa
+    //se la lunghezza coincide con la parola che trovo scritta vuol dire che e' gia completa sse non ci sono jolly
     if(l==spazio){
-      preesistente=1;
-      trovato=1;
+      for(c=0;'\0'!=appoggio[c] && '*';c++);
+      if(c==l){//se non ho fallito il for di prima prima della fine della parola
+	preesistente=1;
+	trovato=1;
+      }
     }
 
     //sorteggio una lunghezza NON INDICE compresa tra l e spazio (disponibile) dalla quale cominciare a scandagliare il dizionario
@@ -471,14 +485,13 @@ int completaO(const int x, const int y){
       cond=spazio-l+1;
     else
       cond=spazio-2;
-    
   }
   
   c=0;//devo provare una volta ogni lunghezza nel peggiore dei casi
   while(!trovato && c<cond){//fintanto che non ho trovato come continuare la parola e non ho provato tutte le lunghezze ammissibili
     
     j=rand()%NPAROLE;//faccio in modo che non appaiano sono i risultati di inizio vettore
-    //    printf("inizio=%d, j=%d, c=%d, cond=%d, spazio=%d\n",inizio,j,c,cond,spazio);//debug
+    
     for(i=0;i<NPAROLE && !trovato;i++){//per ogni parola di quella lunghezza
       j++;//questa cosa accadra i volte
       if(j>=NPAROLE)//questa quindi al piu una...
@@ -522,7 +535,7 @@ int completaV(const int x, const int y){
   //torno indietro a inizio parola qualora non ci fossi gia
   while('\0'!=cruciverba[u-1][y])
     u--;
-
+  
   //devo sapere quanto spazio ho 
   spazio=contaVerticale(u,y);
  
@@ -530,26 +543,42 @@ int completaV(const int x, const int y){
     trovato=1;//parole piu corte di 3 lettere vanno sempre bene
     if(1==spazio)
       copiaAsteriscoNelCruciverbaV("*",u,y);
-    else//se invece ci sono due spazi
+    else if(2==spazio)//se invece ci sono due spazi
       copiaAsteriscoNelCruciverbaV("**",u,y);//stampo un asterisco
+    preesistente=1;
   }
-  
+
   //non e' utile eseguire questi passaggi se ho gia stabilito che va bene
   if(!trovato){
-    //copio la parola in appoggio e tronco al primo spazio bianco accettando gli asterischi come jolly
-    for(c=0;'*'==cruciverba[u+c][y] || ('A'<=cruciverba[u+c][y] && 'Z'>=cruciverba[u+c][y]);c++)
+    //copio la parola in appoggio
+    for(c=0;'\0'!=cruciverba[u+c][y];c++)//copio tutta la stringa fino al carattere di terminazione
       appoggio[c]=cruciverba[u+c][y];
     appoggio[c]='\0';
+
+    //scorro da fine stringa alla ricerca del primo carattere non spazio
+    while(' '==appoggio[--c]); //c all'inizio su c.t. quindi deincremento e poi considero
+
+    //imposto la fine della stringa dopo l'ultimo carattere non spazio
+    appoggio[c+1]='\0';//quando esco dal while c punta all'ultimo carattere letterale che non voglio sovrascrivere (+1)
+
+    //jollificazione degli spazi infraparola
+    while(-1!=--c)//per ogni carattere letterale precedente all'ultimo
+      if(' '==appoggio[c])//se incontro uno spazio
+	appoggio[c]='*';//lo jollifico perche vuol dire che se non l'ho scritto finora non incrocia con nulla
+
  
     //devo sapere quanto e' lunga la parola da completare
     l=strlen(appoggio);
-    
-    //se la lunghezza coincide con la parola che trovo scritta vuol dire che e' gia completa
+
+    //se la lunghezza coincide con la parola che trovo scritta vuol dire che e' gia completa sse non ci sono jolly
     if(l==spazio){
-      preesistente=1;
-      trovato=1;
-    }
- 
+      for(c=0;'\0'!=appoggio[c] && '*';c++);
+      if(c==l){//se non ho fallito il for di prima prima della fine della parola
+	preesistente=1;
+	trovato=1;
+      }
+    }    
+
     //sorteggio una lunghezza NON INDICE compresa tra l e spazio (disponibile) dalla quale cominciare a scandagliare il dizionario
     do
       inizio=sorteggiaLunghezza(spazio);
@@ -561,7 +590,7 @@ int completaV(const int x, const int y){
     else
       cond=spazio-2;
   }
- 
+
   c=0;//devo provare una volta ogni lunghezza nel peggiore dei casi
   while(!trovato && c<cond){//fintanto che non ho trovato come continuare la parola e non ho provato tutte le lunghezze ammissibili
     
@@ -575,7 +604,6 @@ int completaV(const int x, const int y){
 	trovato=1;//esco dai cicli di ricerca
     }
     if(!trovato){
-
       inizio++;//eseguo ricerca con la prossima lunghezza
       if(inizio>=spazio){//se sto uscendo dalle righe della matrice dizionario
 	if(l<3)//riporto alla lunghezza della stringa da completare

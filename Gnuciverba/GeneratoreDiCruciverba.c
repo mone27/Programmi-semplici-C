@@ -39,7 +39,7 @@ int cruciFill4(){
   
   //sempre tutto bene all'inizio
   bene=1;
-
+  //  puts("INIZIO COSTRUZIONE NUOVO CRUCIVERBA---------------------------------");
   //per ogni casella del cruciverba significativa
   for(a=1;a<n && bene;a++)//per ogni riga
     for(b=1;b<n && bene;b++){//per ogni colonna
@@ -73,16 +73,20 @@ int cruciFill4(){
 
       //se la casella ha una lettera
       else if(isalpha(cruciverba[a][b])){
-	//	printf("Casella %d,%d piena: %s\n",a,b,&cruciverba[a][b]);//debug
 	bene+=completaO(a,b);
-	//	printf("completaO(%d,%d)=%d\t%s\n",a,b,bene,&cruciverba[a][b]);
+        printf("completaO(%d,%d)=%d\n",a,b,bene);
+	stampaCruciverba();
 	bene+=completaV(a,b);
-	//	printf("completaV(%d,%d)=%d\n",a,b,bene);
-	//	stampaCruciverba();
-	bene+=completaO(b,a);
-	//	printf("completaO(%d,%d)=%d\n",b,a,bene);
-      	bene+=completaV(b,a);
-	//	printf("completaV(%d,%d)=%d\n",b,a,bene);
+	printf("completaV(%d,%d)=%d\n",a,b,bene);
+	stampaCruciverba();
+	if(1==a){//questo sistema lo utilizzo solo per gli spigoli
+	  bene+=completaO(b,a);
+	  printf("completaO(%d,%d)=%d\n",b,a,bene);
+	  stampaCruciverba();
+	  bene+=completaV(b,a);
+	  printf("completaV(%d,%d)=%d\n",b,a,bene);
+	  stampaCruciverba();
+	}
 	if(5==bene)//bene stava gia a 1 e ci sommo i quattro positivi delle funzioni completaX
 	  bene=1;
 	else
@@ -91,7 +95,7 @@ int cruciFill4(){
 
       //se e' un carattere di terminazione skippo
     }
-
+  //  puts("FINE GENERAZIONE.");
   return bene;
 }
 
@@ -114,12 +118,12 @@ int main() {
   do{
     cruciClean();
     a=cruciFill4();
-    if(cruciverba[4][4]!=' '){
+    if(cruciverba[4][4]=='R'){
       puts("Cruciverba parziale:");
       stampaCruciverba();
     }      
   }while(!a && !cruciCheck());
-
+  
 //Fine generazione----------------------------------------------------------
   stampaCruciverbaVuoto();
   stampaCruciverba();
