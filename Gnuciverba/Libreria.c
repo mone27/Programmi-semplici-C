@@ -404,8 +404,6 @@ int cruciCheck(){
     for(b=1;b<COLONNE+1 && bene;b++)//per ogni colonna utile
       if(!(vediSeEsisteV(a,b) && vediSeEsisteO(a,b)))
 	bene=0;
-      //      putchar('0'+!(vediSeEsisteV(a,b) && vediSeEsisteO(a,b)));
-    //    putchar('\n');
   }
   
   return bene;

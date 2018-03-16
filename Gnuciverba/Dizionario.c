@@ -29,7 +29,7 @@
   #define LPAROLE 7   //Nuero di lunghezze di parole
 
   char *dizionario[LPAROLE][NPAROLE]={
-    {"GNU","TUX","LUG","MIT","GCC","GPG","APT","NSA","GIT","FSF","EFF","USB","NOX","UNI","TOR","DIE","CPU","ALU","AMD","DIR"},          
+    {"GNU","TUX","LUG","MIT","GCC","GPG","APT","NSA","GIT","FSF","EFF","USB","NOX","UNI","TOR","DIE","CPU","FCN","AMD","DIR"},          
     {"ARCH","RUST","MEGA","HTML","SUDO","ROOT","SNAP","KALI","LEAK","WINE","INIT","UDOO","SENX","EINK","BASH","AMOR","OREO","NODO","NATO","CINA"},
     
     {"LINUS","LINUX","UNIX","PRISM","APPLE","TERES","INODE","NIXON","PUPPY","EMACS","INTEL","GNOME","ORFOX","UNITY","REDOX","NOTTE","ALTRO","ATOMO","SHARP","MOUSE"},
