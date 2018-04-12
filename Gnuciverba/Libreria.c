@@ -4,7 +4,7 @@
 #include <ctype.h>
 #include <time.h>
 #include <stdlib.h>
-#include "Dizionario.c" //definisce la corretta matrice dizionario
+#include "Dizionario.h" //definisce la corretta matrice dizionario
 char cruciverba[RIGHE+2][COLONNE+2]; //matrice che rappresenta il cruciverba
 int tabUtilizzo[LPAROLE][NPAROLE]; //matrice che tiene traccia dell'utilizzo delle parole del dizionario: 0 non usata, 1 gia' usata;
 
@@ -17,6 +17,61 @@ int tabUtilizzo[LPAROLE][NPAROLE]; //matrice che tiene traccia dell'utilizzo del
 
 //funzione che copia una stringa del dizionario nel cruciverba in orizzontale
 //ATTENZIONE: la funzione deve essere chiamata solo se si e' sicuri che la stringa entri nella tabella
+void cruciInit(){
+  // inizializza la matrice a tutte A e a /0 sui bordi
+  int a,b;
+
+  //inizializzo matrice ad A e la riquadro con caratteri di terminazione \0
+  for(a=0;a<RIGHE+2;a++)//per ogni riga
+    for(b=0;b<COLONNE+2;b++)//per ogni colonna
+      if( 0==a || 0==b || RIGHE+1==a || COLONNE+1==b ) //se sto al bordo
+        cruciverba[a][b]='\0';
+      else // sto nel cruciverba
+        cruciverba[a][b]='A';
+}
+int allZ(const char carattere){
+  int a,b,daje;
+  daje=1;
+
+  for(a=1; a<RIGHE+1 && daje ;a++)//per ogni riga utile
+    for(b=1; b<COLONNE+1 && daje ;b++)//per ogni colonna utile
+      if(cruciverba[a][b]!=carattere)
+    daje=0;
+
+  return daje;
+}
+
+//funzione che stampa il cruciverba prima pieno e poi vuoto
+void cruciPrint(){
+  puts("\nCruciverba trovato vuoto:");
+  stampaCruciverbaVuoto();
+  puts("\nCruciverba trovato:");
+  stampaCruciverba();
+}
+
+void cruciPlusPlus(const int a, const int b){
+
+  //se ho una Z incremento sul carattere di terminazione
+  if(cruciverba[a][b]=='Z')
+    cruciverba[a][b]='\0';
+
+  //se ho il carattere di terminazione ritorno a A e incremento la casella successiva
+  else if(cruciverba[a][b]=='\0'){
+    cruciverba[a][b]='A';
+    //se la casella successiva sta sulla stessa riga
+    if(b+1<COLONNE+1)
+      cruciPlusPlus(a,b+1);
+    //altrimenti vado a capo
+    else
+      cruciPlusPlus(a+1,1);
+  }
+
+  //se ho una lettera qualsiasi: cruciPlusPlus!!!
+  else
+    cruciverba[a][b]++;
+}
+
+//woking comment---end from main.c
 void copiaNelCruciverbaO(const char * const stringa,const int riga, const int colonna){
   int a;
   
@@ -676,5 +731,10 @@ int cruciFill3(){
       }
 
   return bene;
+}
+
+void tabInit(){
+    //what a stupid thing an empty fuction
+
 }
 
