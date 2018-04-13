@@ -17,6 +17,72 @@ int tabUtilizzo[LPAROLE][NPAROLE]; //matrice che tiene traccia dell'utilizzo del
 
 //funzione che copia una stringa del dizionario nel cruciverba in orizzontale
 //ATTENZIONE: la funzione deve essere chiamata solo se si e' sicuri che la stringa entri nella tabella
+int cruciFill4(){
+  int a,b,bene,n,lunO,lunV;
+  //per riempimento quadrato trovo lato minore
+  n= RIGHE>COLONNE ? COLONNE+1 : RIGHE+1;
+
+  //sempre tutto bene all'inizio
+  bene=1;
+  //  puts("INIZIO COSTRUZIONE NUOVO CRUCIVERBA---------------------------------");
+  //per ogni casella del cruciverba significativa
+  for(a=1;a<n && bene;a++)//per ogni riga
+    for(b=1;b<n && bene;b++){//per ogni colonna
+
+      //se la casella e' vuota
+      if(' '==cruciverba[a][b]){
+    //	printf("Casella %d,%d vuota\t",a,b);//debug
+    lunO=contaOrizzontale(a,b);
+    lunV=contaVerticale(a,b);
+    if(lunO>=lunV){//se ho piu' spazio libero in orizzontale
+      //       printf("Ho piu spazio in orizzontale\t");//debug
+      if(lunO<3)//se ho una o due caselle metto un asterisco (magari in quello dopo lunV>lunO)
+        cruciverba[a][b]='*';
+      else
+        copiaNelCruciverbaO(parola(lunO),a,b);//immetto nuova parola
+      bene=completaV(a,b);// vedo se posso dare un senso anche nell'altra dimenzione
+    }
+    else{ //se invece ho piu spazio in verticale
+      //	  printf("Ho piu spazio in verticale\t");//debug
+      if(lunV<3){//se ho solo uno o due caselle metto asterischi
+        if(1==lunV)
+          copiaAsteriscoNelCruciverbaV("*",a,b);
+        else//se invece ci sono due spazi
+          copiaAsteriscoNelCruciverbaV("**",a,b);
+      }
+      copiaNelCruciverbaV(parola(lunV),a,b);//immetto nuova parola
+      bene=completaO(a,b);// vedo se posso dare un senso anche nell'altra dimenzione
+    }
+    //       	putchar('\n');//debug
+      }
+
+      //se la casella ha una lettera
+      else if(isalpha(cruciverba[a][b])){
+    bene+=completaO(a,b);
+        printf("completaO(%d,%d)=%d\n",a,b,bene);
+    stampaCruciverba();
+    bene+=completaV(a,b);
+    printf("completaV(%d,%d)=%d\n",a,b,bene);
+    stampaCruciverba();
+    if(1==a){//questo sistema lo utilizzo solo per gli spigoli
+      bene+=completaO(b,a);
+      printf("completaO(%d,%d)=%d\n",b,a,bene);
+      stampaCruciverba();
+      bene+=completaV(b,a);
+      printf("completaV(%d,%d)=%d\n",b,a,bene);
+      stampaCruciverba();
+    }
+    if(5==bene)//bene stava gia a 1 e ci sommo i quattro positivi delle funzioni completaX
+      bene=1;
+    else
+      bene=0;
+      }
+
+      //se e' un carattere di terminazione skippo
+    }
+  //  puts("FINE GENERAZIONE.");
+  return bene;
+}
 void copiaNelCruciverbaO(const char * const stringa,const int riga, const int colonna){
   int a;
   
