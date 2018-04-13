@@ -33,15 +33,16 @@ void cruciInit(){
     stampaCruciverba();
 }
 int allZ(const char carattere){
-    int a,b,daje;
-    daje=1; // what a wonderful name :)
+    int row_counter,column_counter;
+    int all_Z = 1; //TODO change to bool e capire che c fa questa variabile
+    all_Z=1; // what a wonderful name :)
 
-    for(a=1; a<RIGHE+1 && daje ;a++)//per ogni riga utile
-        for(b=1; b<COLONNE+1 && daje ;b++)//per ogni colonna utile
-            if(cruciverba[a][b]!=carattere)
-                daje=0;
+    for(row_counter=1; row_counter<RIGHE+1 && daje ;row_counter++)//per ogni riga utile
+        for(column_counter=1; column_counter<COLONNE+1 && daje ;column_counter++)//per ogni colonna utile
+            if(cruciverba[row_counter][column_counter]!=carattere)
+                all_Z=0;
 
-    return daje;
+    return all_Z;
 }
 
 //funzione che stampa il cruciverba prima pieno e poi vuoto
@@ -455,13 +456,14 @@ int cruciCheckSpazi(){
 
 //funzione che controlla che un cruciverba senza spazi sia corretto
 int cruciCheck(){
-    int bene,a,b;
+    int bene,row_counter,column_counter;
     bene=1;
 
-    for(a=1;a<RIGHE+1 && bene;a++){//per ogni riga utile
-        for(b=1;b<COLONNE+1 && bene;b++)//per ogni colonna utile
-            if(!(vediSeEsisteV(a,b) && vediSeEsisteO(a,b)))
-                bene=0;
+    for(row_counter=1;row_counter<RIGHE+1 && bene;row_counter++){//per ogni riga utile
+        for(column_counter=1;column_counter<COLONNE+1 && bene;column_counter++)//per ogni colonna utile
+            if(!(vediSeEsisteV(row_counter,column_counter) && vediSeEsisteO(row_counter,column_counter)))
+                return 0;//bene=0; // TODO qui posso ritornare immediatamente??? tanto non potr mai essere 1
+
     }
 
     return bene;
