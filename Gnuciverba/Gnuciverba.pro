@@ -6,3 +6,6 @@ CONFIG -= qt
 SOURCES += \
         main.c \
     Libreria.c
+
+HEADERS += \
+    Dizionario.h
